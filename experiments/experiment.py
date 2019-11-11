@@ -19,7 +19,7 @@ def run_experiment(exp_num, target, pswd, definition):
             print("Argument set: {}".format(args))
 
             run_remote_setup(exp_num, target, pswd)
-            sleep(2)
+            time.sleep(2)
             directory = os.path.dirname(os.path.abspath(__file__))
             os.system("python3 {}/{}/run.py {}".format(directory, exp_num, target))
             time.sleep(2)
