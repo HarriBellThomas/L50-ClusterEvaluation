@@ -25,7 +25,7 @@ def run_remote_setup(exp_num, target, pswd):
 
 #
 def reset_remote(target, pswd):
-    print("Resetting evaluation environment for {}...".format(target))
+    print("\nResetting evaluation environment for {}...".format(target))
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(str(target), username='L50', password=pswd)

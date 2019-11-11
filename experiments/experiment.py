@@ -12,6 +12,7 @@ import yaml
 def run_experiment(exp_num, target, pswd, definition):
     if check_experiment_number(exp_num):
         argument_sets = definitions['parameters'] if 'parameters' in definition else [[]]
+        print(argument_sets)
         for i in range(len(argument_sets)): 
             args = argument_sets[i]
             print("-- Experiment {}.{} --".format(exp_num, i))
