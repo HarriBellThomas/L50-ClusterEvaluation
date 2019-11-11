@@ -1,8 +1,8 @@
 #!/bin/sh
 if [ ! $INITIALISED ] ; then
     # Run setup phase as root.
-    sudo apt-get update
-    sudo apt-get install iperf iperf3 traceroute -y
+    sudo apt-get update -y
+    sudo apt-get install iperf iperf3 traceroute python3-pip -y
     exit
 
     pip3 install IPy paramiko
