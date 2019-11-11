@@ -13,7 +13,8 @@ def run_remote_setup(exp_num, target, pswd):
         ssh.connect(str(target), username='L50', password=pswd)
         cmd = "tmux kill-session -t evaluation > /dev/null 2>&1; "
         cmd = cmd + "tmux new-session -d -s evaluation; "
-        cmd = cmd + "tmux send -t evaluation python3 ~/L50-ClusterEvaluation/experiments/{}/remote.py ENTER".format(exp_num)
+        cmd = cmd + "tmux send -t evaluation python3 Space ~/L50-ClusterEvaluation/experiments/{}/remote.py ENTER; ".format(exp_num)
+        cmd = cmd + "tmux ls"
         ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(cmd, get_pty=True)
         print("stdout:  " + str(ssh_stdout.read()))
         print("stderr:  " + str(ssh_stderr.read()))
