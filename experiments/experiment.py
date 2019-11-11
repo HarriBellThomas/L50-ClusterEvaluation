@@ -11,7 +11,7 @@ import getpass
 def run_experiment(exp_num, target, pswd):
     if check_experiment_number(exp_num):
         print("-- Experiment {} --".format(exp_num))
-        run_remote_setup(exp_num)
+        run_remote_setup(exp_num, target, pswd)
 
         os.system("python3 {}/run.py {}".format(exp_num, pswd))
     else:

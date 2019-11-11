@@ -5,7 +5,8 @@ if [ ! $INITIALISED ] ; then
     sudo apt-get install iperf iperf3 traceroute python3-pip -y
     exit
 
-    pip3 install IPy paramiko
+    pip3 install --upgrade pip
+    pip install IPy paramiko --user
 
     # Get the eth0 IP address.
     export HOST="$(hostname)"
