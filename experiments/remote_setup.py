@@ -9,7 +9,7 @@ def run_remote_setup(exp_num, target, pswd):
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         ssh.connect(str(target), username='L50', password=pswd)
-        cmd = "python3 ~/L50-ClusterEvaluation/experiments/{}/remote.py"
+        cmd = "python3 ~/L50-ClusterEvaluation/experiments/{}/remote.py".format(exp_num)
         ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(cmd)
         print("stdout:  " + str(ssh_stdout.read()))
         print("stderr:  " + str(ssh_stderr.read()))
