@@ -8,7 +8,7 @@ def run_remote_setup(exp_num, target, pswd):
 
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(target, username='L50', password=pswd)
+        ssh.connect(str(target), username='L50', password=pswd)
         cmd = "python3 {}/remote.py"
         ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(cmd)
         print(ssh_stdout.read())
