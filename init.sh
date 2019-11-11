@@ -1,9 +1,10 @@
 #!/bin/sh
-if !$INITIALISED ; then
+if [ ! $INITIALISED ] ; then
     # Run setup phase as root.
     sudo su
     apt-get update
     apt-get install iperf iperf3 traceroute -y
+    exit
 
     # Get the eth0 IP address.
     export HOST="$(hostname)"
