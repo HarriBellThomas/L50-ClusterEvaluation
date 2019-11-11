@@ -4,7 +4,7 @@ import sys
 import os
 
 def run(target):
-   os.system("iperf -t 10 -c {}".format(target)) 
+   os.system("iperf -t 10 -c {}".format(str(target))) 
 
 
 if __name__ == "__main__":

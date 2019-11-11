@@ -21,7 +21,7 @@ def run_experiment(exp_num, target, pswd, definition):
             run_remote_setup(exp_num, target, pswd)
             directory = os.path.dirname(os.path.abspath(__file__))
             os.system("python3 {}/{}/run.py {}".format(directory, exp_num, pswd))
-            sleep(2)
+            time.sleep(2)
             reset_remote(target, pswd)
     else:
         print("Invalid experiment number")
