@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import argparse
 import sys
+import os
 
-def run(ssh_pswd):
-    print("test {}".format(ssh_pswd))
+def run(target):
+   os.system("iperf -t 10 -c {}".format(target)) 
 
 
 if __name__ == "__main__":
