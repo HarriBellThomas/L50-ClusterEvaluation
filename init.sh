@@ -6,7 +6,7 @@ if [ ! $INITIALISED ] ; then
     exit
 
     pip3 install --upgrade pip
-    pip install IPy paramiko --user
+    pip install IPy paramiko pyyaml --user
 
     # Get the eth0 IP address.
     export HOST="$(hostname)"

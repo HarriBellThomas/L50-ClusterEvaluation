@@ -1,0 +1,6 @@
+experiments:
+  - id: 1
+    name: ping
+    parameters:
+      - ['a', 'b']
+      - ['c', 'd']
