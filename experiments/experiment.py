@@ -18,12 +18,14 @@ def run_experiment(exp_num, target, pswd, definition):
             print("-- Experiment {}.{} --".format(exp_num, i))
             print("Description: {}".format(definition.get('description', '(none)')))
             print("Argument set: {}".format(args))
-            print(json.dumps(args))
+            serialised_args = json.dumps(args)
 
-            run_remote_setup(exp_num, target, pswd)
+            run_remote_setup(exp_num, target, pswd, serialised_args)
             time.sleep(2)
             directory = os.path.dirname(os.path.abspath(__file__))
-            os.system("python3 {}/{}/run.py {} '{}'".format(directory, exp_num, target, json.dumps(args)))
+            os.system("python3 {}/{}/run.py {} '{}'".format(
+                directory, exp_num, target, serialised_args
+            ))
             time.sleep(2)
             reset_remote(target, pswd)
             print("")

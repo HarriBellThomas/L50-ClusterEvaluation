@@ -3,7 +3,7 @@ import os
 import paramiko
 
 #
-def run_remote_setup(exp_num, target, pswd):
+def run_remote_setup(exp_num, target, pswd, args):
     directory = os.path.dirname(os.path.abspath(__file__))
     if os.path.exists("{}/{}/remote.py".format(directory, exp_num)):
         print("Setting up remote for experiment {}...".format(exp_num))
@@ -13,7 +13,8 @@ def run_remote_setup(exp_num, target, pswd):
         ssh.connect(str(target), username='L50', password=pswd)
         cmd = "tmux kill-session -t evaluation > /dev/null 2>&1; "
         cmd = cmd + "tmux new-session -d -s evaluation; "
-        cmd = cmd + "tmux send -t evaluation python3 Space ~/L50-ClusterEvaluation/experiments/{}/remote.py ENTER; ".format(exp_num)
+        cmd = cmd + "tmux send -t evaluation -l python3 ~/L50-ClusterEvaluation/experiments/{}/remote.py '{}'; ".format(exp_num, args)
+        cmd = cmd + "tmux send -t evaluation ENTER; "
         cmd = cmd + "tmux ls"
         ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(cmd, get_pty=True)
         print("stdout:  " + str(ssh_stdout.read()))
