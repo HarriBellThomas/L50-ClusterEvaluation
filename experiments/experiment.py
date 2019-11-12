@@ -7,24 +7,26 @@ from remote_setup import run_remote_setup, reset_remote
 from importlib import import_module
 import getpass
 import yaml
+import json
 
 #
 def run_experiment(exp_num, target, pswd, definition):
     if check_experiment_number(exp_num):
-        argument_sets = definitions['parameters'] if 'parameters' in definition else [[]]
-        print(argument_sets)
+        argument_sets = definition.get('parameters', [[]])
         for i in range(len(argument_sets)): 
             args = argument_sets[i]
             print("-- Experiment {}.{} --".format(exp_num, i))
-            print("Description: {}".format(definition['name'] if 'name' in definition else '(none)'))
+            print("Description: {}".format(definition.get('description', '(none)')))
             print("Argument set: {}".format(args))
+            print(json.dumps(args))
 
             run_remote_setup(exp_num, target, pswd)
             time.sleep(2)
             directory = os.path.dirname(os.path.abspath(__file__))
-            os.system("python3 {}/{}/run.py {}".format(directory, exp_num, target))
+            os.system("python3 {}/{}/run.py {} '{}'".format(directory, exp_num, target, json.dumps(args)))
             time.sleep(2)
             reset_remote(target, pswd)
+            print("")
     else:
         print("Invalid experiment number")
 
@@ -58,7 +60,6 @@ if __name__ == "__main__":
                 for item in data['experiments']:
                     if 'id' in item:
                         experiment_data[item['id']] = item
-        print(experiment_data)
 
         ip = IP(args.target)
         pswd = getpass.getpass('SSH password for L50: ')
@@ -69,12 +70,12 @@ if __name__ == "__main__":
 
         if args.experiment == 0:
             for experiment in get_all_experiments():
-                exp_definition = experiment_data[experiment] if experiment in experiment_data else {}
+                exp_definition = experiment_data.get(experiment, {})
                 run_experiment(experiment, args.target, pswd, exp_definition)
                 print("--------------------------------\n")
                 time.sleep(0.5) # Increase
         else:
-            exp_definition = experiment_data[args.experiment] if args.experiment in experiment_data else {}
+            exp_definition = experiment_data.get(int(args.experiment), {})
             run_experiment(args.experiment, ip, pswd, exp_definition)
     except ValueError:
         print("Invalid IP address: {}".format(args.target))

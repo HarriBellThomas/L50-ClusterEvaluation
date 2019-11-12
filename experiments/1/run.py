@@ -2,10 +2,16 @@
 import argparse
 import sys
 import os
+import json
 
-def run(target):
-   os.system("iperf -t 5 -f m -c {}".format(str(target))) 
+def run(target, arguments):
+    buffer_length = arguments.get('buffer_length', 80000)
+    time = arguments.get('time', 5)
+    os.system("iperf -i 1 -t {} -f m -c {} -l {}".format(
+        time, str(target), buffer_length
+    ))
 
 
 if __name__ == "__main__":
-    run(sys.argv[1])
+    args = json.loads(sys.argv[2])
+    run(sys.argv[1], args)

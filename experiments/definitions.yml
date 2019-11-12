@@ -1,6 +1,7 @@
 experiments:
   - id: 1
-    name: ping
+    name: iperf
+    description: Run iperf experiments between the two hosts. 
     parameters:
-      - ['a', 'b']
-      - ['c', 'd']
+      - { buffer_length: 80000, time: 5 }
+      - { buffer_length: 20000, time: 5 }
