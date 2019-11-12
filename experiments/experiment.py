@@ -13,6 +13,7 @@ import json
 def run_experiment(exp_num, target, pswd, definition):
     if check_experiment_number(exp_num):
         argument_sets = definition.get('parameters', [[]])
+        print("---[BEGIN EXPERIMENT]---\n")
         for i in range(len(argument_sets)): 
             args = argument_sets[i]
             print("-- Experiment {}.{} --".format(exp_num, i))
@@ -29,6 +30,7 @@ def run_experiment(exp_num, target, pswd, definition):
             time.sleep(2)
             reset_remote(target, pswd)
             print("")
+        print("---[END EXPERIMENT]---\n")
     else:
         print("Invalid experiment number")
 
@@ -52,32 +54,32 @@ if __name__ == "__main__":
     parser.add_argument('-e','--experiment', help='Which experiment to run. Omit to run all.', default=0)
     parser.add_argument('-t','--target', help='Target IP address.', required=True)
     args = parser.parse_args()
-    
-    try:
-        directory = os.path.dirname(os.path.abspath(__file__))
-        experiment_data = {}
-        with open("{}/definitions.yml".format(directory), 'r') as stream:
-            data = yaml.safe_load(stream)
-            if 'experiments' in data:
-                for item in data['experiments']:
-                    if 'id' in item:
-                        experiment_data[item['id']] = item
+    pswd = getpass.getpass('SSH password for L50: ')
 
-        ip = IP(args.target)
-        pswd = getpass.getpass('SSH password for L50: ')
+    directory = os.path.dirname(os.path.abspath(__file__))
+    experiment_data = {}
+    with open("{}/definitions.yml".format(directory), 'r') as stream:
+        data = yaml.safe_load(stream)
+        if 'experiments' in data:
+            for item in data['experiments']:
+                if 'id' in item:
+                    experiment_data[item['id']] = item
 
-        experiment_name = "all experiments" if args.experiment == 0 else "experiment {}".format(args.experiment)
-        print("\nRunning {} against {}...".format(experiment_name, ip))
-        print("--------------------------------\n")
+    targets = [t.strip() for t in args.target.split(",")] if "," in args.target else [args.target]
+    for target in targets:
+        try:
+            ip = IP(target)
 
-        if args.experiment == 0:
-            for experiment in get_all_experiments():
-                exp_definition = experiment_data.get(experiment, {})
-                run_experiment(experiment, args.target, pswd, exp_definition)
-                print("--------------------------------\n")
-                time.sleep(0.5) # Increase
-        else:
-            exp_definition = experiment_data.get(int(args.experiment), {})
-            run_experiment(args.experiment, ip, pswd, exp_definition)
-    except ValueError:
-        print("Invalid IP address: {}".format(args.target))
+            experiment_name = "all experiments" if args.experiment == 0 else "experiment {}".format(args.experiment)
+            print("\nRunning {} against {}...\n".format(experiment_name, ip))
+
+            if args.experiment == 0:
+                for experiment in get_all_experiments():
+                    exp_definition = experiment_data.get(experiment, {})
+                    run_experiment(experiment, target, pswd, exp_definition)
+                    time.sleep(0.5) # Increase
+            else:
+                exp_definition = experiment_data.get(int(args.experiment), {})
+                run_experiment(args.experiment, ip, pswd, exp_definition)
+        except ValueError:
+            print("Invalid IP address: {}".format(target))
