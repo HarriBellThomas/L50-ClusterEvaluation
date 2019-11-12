@@ -3,8 +3,7 @@ import os
 import time
 import sys
 
-print(sys.argv)
+time = int(time.time())
+os.system("{} > ~/iperf-{}".format(str(sys.argv), time))
 print("Running iperf...")
-os.system("iperf -s -i 1 -f m > ~/iperf-{}".format(
-    int(time.time())
-))
+os.system("iperf -s -i 1 -f m > ~/iperf-{}".format(time))
