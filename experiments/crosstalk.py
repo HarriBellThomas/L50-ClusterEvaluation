@@ -4,7 +4,7 @@ def crosstalk(host1, host2, bandwidth, time):
     client_command = "iperf3 -c {} -b {} -t {}".format(str(host2), bandwidth, time)
     tmux_command = "tmux new-session -d -s evaluation-crosstalk; tmux send -t evaluation-crosstalk \"{}\" ENTER; tmux ls;"
     run_remote_command(host1, tmux_command.format(server_command))
-    run_remote_command(host1, tmux_command.format(client_command))
+    run_remote_command(host2, tmux_command.format(client_command))
 
 def stop_crosstalk(host1, host2):
     stop_crosstalk(host1)
