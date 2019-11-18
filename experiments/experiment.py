@@ -28,7 +28,7 @@ def run_experiment(exp_num, target, definition):
                 directory, exp_num, target, serialised_args
             ))
             time.sleep(2)
-            reset_remote(target)
+            reset_remote(exp_num, target)
             print("")
         print("---[END EXPERIMENT]---\n")
     else:

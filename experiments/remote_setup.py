@@ -4,7 +4,7 @@ import paramiko
 import base64
 
 #
-def run_remote_setup(exp_num, target, pswd, args):
+def run_remote_setup(exp_num, target, args):
     directory = os.path.dirname(os.path.abspath(__file__))
     if os.path.exists("{}/{}/remote.py".format(directory, exp_num)):
         print("Setting up remote for experiment {}...".format(exp_num))
@@ -30,7 +30,7 @@ def run_remote_setup(exp_num, target, pswd, args):
         print("No remote setup for experiment {}.".format(exp_num))
 
 #
-def reset_remote(target, pswd):
+def reset_remote(exp_num, target):
     directory = os.path.dirname(os.path.abspath(__file__))
     if os.path.exists("{}/{}/remote.py".format(directory, exp_num)):
         print("\nResetting evaluation environment for {}...".format(target))
