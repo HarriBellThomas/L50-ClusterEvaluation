@@ -35,7 +35,7 @@ def reset_remote(target, pswd):
     ssh = paramiko.SSHClient()
     ssh_key = paramiko.RSAKey.from_private_key_file("/home/L50/.ssh/evaluation")
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(str(target), username='L50', pkey=ssk_key)
+    ssh.connect(str(target), username='L50', pkey=ssh_key)
     cmd = "tmux send -t evaluation C-c; sleep 2; "
     cmd = cmd + "tmux kill-session -t evaluation;"
     ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(cmd, get_pty=True)
