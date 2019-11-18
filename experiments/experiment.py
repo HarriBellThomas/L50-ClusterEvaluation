@@ -10,7 +10,7 @@ import yaml
 import json
 
 #
-def run_experiment(exp_num, target, pswd, definition):
+def run_experiment(exp_num, target, definition):
     if check_experiment_number(exp_num):
         argument_sets = definition.get('parameters', [[]])
         print("---[BEGIN EXPERIMENT]---\n")
@@ -21,14 +21,14 @@ def run_experiment(exp_num, target, pswd, definition):
             print("Argument set: {}".format(args))
             serialised_args = json.dumps(args)
 
-            run_remote_setup(exp_num, target, pswd, serialised_args)
+            run_remote_setup(exp_num, target, serialised_args)
             time.sleep(2)
             directory = os.path.dirname(os.path.abspath(__file__))
             os.system("python3 {}/{}/run.py {} '{}'".format(
                 directory, exp_num, target, serialised_args
             ))
             time.sleep(2)
-            reset_remote(target, pswd)
+            reset_remote(target)
             print("")
         print("---[END EXPERIMENT]---\n")
     else:
@@ -54,7 +54,7 @@ if __name__ == "__main__":
     parser.add_argument('-e','--experiment', help='Which experiment to run. Omit to run all.', default=0)
     parser.add_argument('-t','--target', help='Target IP address.', required=True)
     args = parser.parse_args()
-    pswd = getpass.getpass('SSH password for L50: ')
+    # pswd = getpass.getpass('SSH password for L50: ')
 
     directory = os.path.dirname(os.path.abspath(__file__))
     experiment_data = {}
@@ -76,10 +76,10 @@ if __name__ == "__main__":
             if args.experiment == 0:
                 for experiment in get_all_experiments():
                     exp_definition = experiment_data.get(experiment, {})
-                    run_experiment(experiment, target, pswd, exp_definition)
+                    run_experiment(experiment, target, exp_definition)
                     time.sleep(0.5) # Increase
             else:
                 exp_definition = experiment_data.get(int(args.experiment), {})
-                run_experiment(args.experiment, ip, pswd, exp_definition)
+                run_experiment(args.experiment, ip, exp_definition)
         except ValueError:
             print("Invalid IP address: {}".format(target))
