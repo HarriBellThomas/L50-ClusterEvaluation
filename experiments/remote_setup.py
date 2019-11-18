@@ -31,16 +31,21 @@ def run_remote_setup(exp_num, target, pswd, args):
 
 #
 def reset_remote(target, pswd):
-    print("\nResetting evaluation environment for {}...".format(target))
-    ssh = paramiko.SSHClient()
-    ssh_key = paramiko.RSAKey.from_private_key_file("/home/L50/.ssh/evaluation")
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(str(target), username='L50', pkey=ssh_key)
-    cmd = "tmux send -t evaluation C-c; sleep 2; "
-    cmd = cmd + "tmux kill-session -t evaluation;"
-    ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(cmd, get_pty=True)
-    print("stdout:  " + str(ssh_stdout.read()))
-    print("stderr:  " + str(ssh_stderr.read()))
-    ssh.close()
+    directory = os.path.dirname(os.path.abspath(__file__))
+    if os.path.exists("{}/{}/remote.py".format(directory, exp_num)):
+        print("\nResetting evaluation environment for {}...".format(target))
+        ssh = paramiko.SSHClient()
+        ssh_key = paramiko.RSAKey.from_private_key_file("/home/L50/.ssh/evaluation")
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(str(target), username='L50', pkey=ssh_key)
+        cmd = "tmux send -t evaluation C-c; sleep 2; "
+        cmd = cmd + "tmux kill-session -t evaluation;"
+        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(cmd, get_pty=True)
+        print("stdout:  " + str(ssh_stdout.read()))
+        print("stderr:  " + str(ssh_stderr.read()))
+        ssh.close()
 
-    print("Done.\n")
+        print("Done.\n")
+    else:
+        print("No remote environment to reset.")
+
