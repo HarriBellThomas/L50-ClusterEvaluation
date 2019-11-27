@@ -24,7 +24,7 @@ def run_experiment(exp_num, target, definition):
             print("Argument set: {}".format(args))
 
             # Unique ID to track experiment. 
-            _id = uuid.uuid()
+            _id = str(uuid.uuid4())
             args._id = _id
             args._run = i
             args._desc = definition.get('description', '(none)')
