@@ -25,9 +25,9 @@ def run_experiment(exp_num, target, definition):
 
             # Unique ID to track experiment. 
             _id = str(uuid.uuid4())
-            args._id = _id
-            args._run = i
-            args._desc = definition.get('description', '(none)')
+            args["_id"] = _id
+            args["_run"] = i
+            args["_desc"] = definition.get('description', '(none)')
             serialised_args = json.dumps(args)
 
             run_remote_setup(exp_num, target, serialised_args)
