@@ -7,7 +7,6 @@ import json
 from experiment import prepare_for_experiment
 
 def run(target, arguments):
-    results_dir = prepare_for_experiment(arguments)
     size = arguments.get('size', 56)  # Payload size in bytes.
     interval = arguments.get('interval', 0.1)  # Inter-packet wait time, seconds.
     flood = arguments.get('flood', false)  # Send at maximum speed.
