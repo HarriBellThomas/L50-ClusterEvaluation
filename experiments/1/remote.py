@@ -5,6 +5,7 @@ import os
 sys.path.insert(1, "{}/..".format(os.path.dirname(os.path.abspath(__file__))))
 import json
 import base64
+from experiment import prepare_for_experiment
 
 time = int(time.time())
 argsEncodedBytes = base64.b64decode(sys.argv[1].encode("utf-8"))
