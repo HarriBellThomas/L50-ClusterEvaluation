@@ -3,7 +3,7 @@ import argparse
 import os
 import time
 from IPy import IP
-from experiments.remote_setup import run_remote_setup, reset_remote
+from remote_setup import run_remote_setup, reset_remote
 from importlib import import_module
 import getpass
 import yaml

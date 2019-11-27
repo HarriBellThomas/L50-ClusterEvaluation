@@ -2,8 +2,9 @@
 import argparse
 import sys
 import os
+sys.path.insert(1, "{}/..".format(os.path.dirname(os.path.abspath(__file__))))
 import json
-from experiments.experiment import prepare_for_experiment
+from experiment import prepare_for_experiment
 
 def run(target, arguments):
     results_dir = prepare_for_experiment(arguments)
