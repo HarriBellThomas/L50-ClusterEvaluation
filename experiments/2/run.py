@@ -9,7 +9,7 @@ from experiment import prepare_for_experiment
 def run(target, arguments):
     size = arguments.get('size', 56)  # Payload size in bytes.
     interval = arguments.get('interval', 0.1)  # Inter-packet wait time, seconds.
-    flood = arguments.get('flood', false)  # Send at maximum speed.
+    flood = arguments.get('flood', False)  # Send at maximum speed.
     duration = arguments.get('duration', 5)  # Run for x seconds.
 
     speed = "-f" if flood else "-i {}".format(interval)
