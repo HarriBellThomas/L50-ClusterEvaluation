@@ -2,6 +2,7 @@
 import argparse
 import sys
 import os
+sys.path.insert(1, "{}/..".format(os.path.dirname(os.path.abspath(__file__))))
 import json
 
 def run(target, arguments):
@@ -14,4 +15,5 @@ def run(target, arguments):
 
 if __name__ == "__main__":
     args = json.loads(sys.argv[2])
+    results_dir = prepare_for_experiment(args, sys.argv[2], sys.argv[1])
     run(sys.argv[1], args)
