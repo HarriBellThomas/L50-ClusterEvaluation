@@ -4,6 +4,7 @@ import sys
 import os
 sys.path.insert(1, "{}/..".format(os.path.dirname(os.path.abspath(__file__))))
 import json
+from experiment import prepare_for_experiment
 
 def run(target, arguments):
     buffer_length = arguments.get('buffer_length', 80000)
