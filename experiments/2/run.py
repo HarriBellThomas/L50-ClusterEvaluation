@@ -3,7 +3,7 @@ import argparse
 import sys
 import os
 import json
-from ..experiment import prepare_for_experiment
+from experiments.experiment import prepare_for_experiment
 
 def run(target, arguments):
     results_dir = prepare_for_experiment(arguments)
