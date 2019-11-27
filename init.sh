@@ -5,7 +5,7 @@ if [ ! $INITIALISED ] ; then
     sudo apt-get install iperf iperf3 traceroute python3-pip -y
 
     pip3 install --upgrade pip
-    pip install IPy paramiko pyyaml scp --user
+    pip3 install IPy paramiko pyyaml scp --user
 
     # Generate SSH key if it doesn't exist.
     ! test -f ~/.ssh/evaluation && ssh-keygen -t rsa -N "" -f ~/.ssh/evaluation
