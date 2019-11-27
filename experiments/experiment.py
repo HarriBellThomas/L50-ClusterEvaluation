@@ -62,7 +62,7 @@ def prepare_for_experiment(args, serialised, target):
     _run = args.get("_run")
     _desc = args.get("_desc")
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    path = pathlib.Path("{}/{}/{}".format(script_dir, _id, _run))
+    path = pathlib.Path("{}/results/{}/{}".format(script_dir, _id, _run))
     path.mkdir(parents=True, exist_ok=True)
     results_dir = path.absolute().as_posix()
 
