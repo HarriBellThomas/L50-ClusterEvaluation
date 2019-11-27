@@ -17,14 +17,14 @@ def run_experiment(exp_num, target, definition):
     if check_experiment_number(exp_num):
         argument_sets = definition.get('parameters', [[]])
         print("---[BEGIN EXPERIMENT]---\n")
+        _id = str(uuid.uuid4())  # Unique ID to track experiment. 
+
         for i in range(len(argument_sets)): 
             args = argument_sets[i]
             print("-- Experiment {}.{} --".format(exp_num, i))
             print("Description: {}".format(definition.get('description', '(none)')))
             print("Argument set: {}".format(args))
 
-            # Unique ID to track experiment. 
-            _id = str(uuid.uuid4())
             args["_id"] = _id
             args["_run"] = i
             args["_desc"] = definition.get('description', '(none)')
@@ -38,7 +38,9 @@ def run_experiment(exp_num, target, definition):
             time.sleep(2)
             reset_remote(exp_num, target)
             print("")
+            
         print("---[END EXPERIMENT]---\n")
+        print("\nID: {}\n".format(_id))
     else:
         print("Invalid experiment number")
 
