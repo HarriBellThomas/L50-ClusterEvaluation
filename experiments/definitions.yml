@@ -5,3 +5,8 @@ experiments:
     parameters:
       - { buffer_length: 80000, time: 5 }
       - { buffer_length: 20000, time: 5 }
+  - id: 2
+    name: ping
+    description: Get RTT times between hosts using ping.
+    parameters:
+      - { size: 100, interval: 0.1, flood: false, duration: 10 }

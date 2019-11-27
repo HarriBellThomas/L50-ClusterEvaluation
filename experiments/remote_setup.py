@@ -2,6 +2,7 @@
 import os
 import paramiko
 import base64
+import time
 
 #
 def run_remote_setup(exp_num, target, args):
@@ -26,6 +27,7 @@ def run_remote_setup(exp_num, target, args):
         ssh.close()
 
         print("Remote setup complete for experiment {}.\n".format(exp_num))
+        time.sleep(2)
     else:
         print("No remote setup for experiment {}.".format(exp_num))
 

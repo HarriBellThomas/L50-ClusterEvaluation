@@ -8,6 +8,9 @@ from importlib import import_module
 import getpass
 import yaml
 import json
+import uuid
+import pathlib
+import socket
 
 #
 def run_experiment(exp_num, target, definition):
@@ -19,10 +22,15 @@ def run_experiment(exp_num, target, definition):
             print("-- Experiment {}.{} --".format(exp_num, i))
             print("Description: {}".format(definition.get('description', '(none)')))
             print("Argument set: {}".format(args))
+
+            # Unique ID to track experiment. 
+            _id = uuid.uuid()
+            args._id = _id
+            args._run = i
+            args._desc = definition.get('description', '(none)')
             serialised_args = json.dumps(args)
 
             run_remote_setup(exp_num, target, serialised_args)
-            time.sleep(2)
             directory = os.path.dirname(os.path.abspath(__file__))
             os.system("python3 {}/{}/run.py {} '{}'".format(
                 directory, exp_num, target, serialised_args
@@ -47,6 +55,25 @@ def get_all_experiments():
         current = current + 1
         valid = check_experiment_number(current)
     return range(1, current)
+
+#
+def prepare_for_experiment(args, serialised, target):
+    _id = args.get("_id")
+    _run = args.get("_run")
+    _desc = args.get("_desc")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    path = pathlib.Path("{}/{}/{}".format(script_dir), _id, _run)
+    path.mkdir(parents=True, exist_ok=True)
+    results_dir = path.absolute().as_posix()
+
+    f = open("{}/explain".format(results_dir), "w")
+    f.write("{} -> {}\nDescription: {}\nTime: {}\nArgs: {}".format(
+        str(socket.gethostbyname(socket.gethostname())), str(target), 
+        _desc, time.ctime(), serialised
+    ))
+    f.close()
+
+    return path.absolute().as_posix()
 
 #
 if __name__ == "__main__":

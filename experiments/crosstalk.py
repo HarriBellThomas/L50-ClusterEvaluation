@@ -1,7 +1,7 @@
 import paramiko
-def crosstalk(host1, host2, bandwidth, time):
+def crosstalk(host1, host2, bandwidth):
     server_command = "iperf3 -s {}".format(str(host1))
-    client_command = "iperf3 -c {} -b {} -t {}".format(str(host1), bandwidth, time)
+    client_command = "iperf3 -c {} -b {} -t 0".format(str(host1), bandwidth)
     tmux_command = "tmux new-session -d -s evaluation-crosstalk; tmux send -t evaluation-crosstalk \"{}\" ENTER; tmux ls;"
     run_remote_command(host1, tmux_command.format(server_command))
     run_remote_command(host2, tmux_command.format(client_command))
