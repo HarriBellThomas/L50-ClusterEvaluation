@@ -31,9 +31,10 @@ def run_experiment(exp_num, target, definition):
             serialised_args = json.dumps(args)
 
             run_remote_setup(exp_num, target, serialised_args, _id)
+            results_dir = prepare_for_experiment(_id, target, definition)
             directory = os.path.dirname(os.path.abspath(__file__))
-            os.system("python3 {}/{}/run.py {} '{}'".format(
-                directory, exp_num, target, serialised_args
+            os.system("python3 {}/{}/run.py {} '{}' {}".format(
+                directory, exp_num, target, serialised_args, results_dir
             ))
             time.sleep(2)
             reset_remote(exp_num, target, _id)
@@ -59,19 +60,41 @@ def get_all_experiments():
     return range(1, current)
 
 #
-def prepare_for_experiment(args, serialised, target):
-    _id = args.get("_id")
-    _run = args.get("_run")
-    _desc = args.get("_desc")
+def prepare_for_experiment(_id, target, meta):
+    _desc = meta.get("description", "(none)")
+    _paramSets = meta.get("parameters", [{}])
+    _runs = len(_paramSets)
+    _time = time.ctime()
+    # TODO: remove _args from output.
+    
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    path = pathlib.Path("{}/results/{}/{}".format(script_dir, _id, _run))
-    path.mkdir(parents=True, exist_ok=True)
-    results_dir = path.absolute().as_posix()
+    for i in range(_runs):
+        path = pathlib.Path("{}/results/data/{}/{}".format(script_dir, _id, i))
+        path.mkdir(parents=True, exist_ok=True)
+        results_dir = path.absolute().as_posix()
 
-    f = open("{}/explain".format(results_dir), "w")
-    f.write("{} -> {}\nDescription: {}\nTime: {}\nArgs: {}".format(
+        # Write per-run explainer.
+        f = open("{}/results/data/{}/explain".format(script_dir, _id), "w")
+        f.write("{} -> {}\nDescription: {}\nTime: {}\nArgs: {}".format(
+            str(socket.gethostbyname(socket.gethostname())), str(target), 
+            _desc, _time, json.dumps(_paramSets[i])
+        ))
+        f.close()
+
+    # Write top level explainer.
+    f = open("{}/results/data/{}/explain".format(script_dir, _id), "w")
+    f.write("{} -> {}\nDescription: {}\nTime: {}\nRuns:".format(
         str(socket.gethostbyname(socket.gethostname())), str(target), 
-        _desc, time.ctime(), serialised
+        _desc, _time, serialised
+    ))
+    for i in range(_runs):
+        f.write("   {}: {}".format(i, json.dumps(_paramSets[i])))
+    f.close()
+
+    # Append to experiment log.
+    f = open("{}/results/contents".format(results_dir), "a+")
+    f.write("{}  {}  {}".format(
+        meta.get('name', '(none)'), _time, _id
     ))
     f.close()
 
