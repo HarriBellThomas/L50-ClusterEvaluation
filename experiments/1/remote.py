@@ -5,8 +5,9 @@ import os
 import json
 import base64
 import socket
+import pathlib
 
-time = int(time.time())
+
 argsEncodedBytes = base64.b64decode(sys.argv[1].encode("utf-8"))
 argsEncodedJson = str(argsEncodedBytes, "utf-8")
 args = json.loads(argsEncodedJson)
