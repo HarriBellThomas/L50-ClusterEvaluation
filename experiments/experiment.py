@@ -187,7 +187,7 @@ if __name__ == "__main__":
         msg = EmailMessage()
         msg.set_content("Test message")
         msg['Subject'] = 'Test'
-        msg['From'] = "server@L50.cl.cam.ac.uk"
+        msg['From'] = "l50-reporter@cl.cam.ac.uk"
         msg['To'] = args.lmk
 
         port = 465 
