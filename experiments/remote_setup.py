@@ -3,6 +3,7 @@ import os
 import paramiko
 import base64
 import time
+from scp import SCPClient
 
 #
 def run_remote_setup(exp_num, target, args, id):
@@ -32,7 +33,7 @@ def run_remote_setup(exp_num, target, args, id):
         print("No remote setup for experiment {}.".format(exp_num))
 
 #
-def reset_remote(exp_num, target, id):
+def reset_remote(exp_num, target, id, run, results_dir):
     directory = os.path.dirname(os.path.abspath(__file__))
     if os.path.exists("{}/{}/remote.py".format(directory, exp_num)):
         print("\nResetting evaluation environment for {}...".format(target))
@@ -45,8 +46,19 @@ def reset_remote(exp_num, target, id):
         ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(cmd, get_pty=True)
         print("stdout:  " + str(ssh_stdout.read()))
         print("stderr:  " + str(ssh_stderr.read()))
-        ssh.close()
+        
+        # Retrieve remote results
+        print("Retrieving remote logs...")
+        scp = SCPClient(ssh)
+        scp.get(
+            "/tmp/{}/{}/remote".format(id, run), # from remote
+            "{}/{}/remote".format(results_dir, run) # to local
+            recursive=False,
+            preserve_times=True
+        )
 
+
+        ssh.close()
         print("Done.\n")
     else:
         print("No remote environment to reset.")

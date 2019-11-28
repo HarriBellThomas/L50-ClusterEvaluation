@@ -18,6 +18,7 @@ def run_experiment(exp_num, target, definition):
         argument_sets = definition.get('parameters', [[]])
         print("---[BEGIN EXPERIMENT]---\n")
         _id = str(uuid.uuid4())  # Unique ID to track experiment. 
+        results_dir = prepare_for_experiment(_id, target, definition)
 
         for i in range(len(argument_sets)): 
             args = argument_sets[i]
@@ -31,13 +32,12 @@ def run_experiment(exp_num, target, definition):
             serialised_args = json.dumps(args)
 
             run_remote_setup(exp_num, target, serialised_args, _id)
-            results_dir = prepare_for_experiment(_id, target, definition)
             directory = os.path.dirname(os.path.abspath(__file__))
             os.system("python3 {}/{}/run.py {} '{}' {}".format(
                 directory, exp_num, target, serialised_args, results_dir
             ))
             time.sleep(2)
-            reset_remote(exp_num, target, _id)
+            reset_remote(exp_num, target, _id, i, results_dir)
             print("")
 
         print("---[END EXPERIMENT]---\n")
