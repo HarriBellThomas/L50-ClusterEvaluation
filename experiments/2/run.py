@@ -6,7 +6,7 @@ sys.path.insert(1, "{}/..".format(os.path.dirname(os.path.abspath(__file__))))
 import json
 from experiment import prepare_for_experiment
 
-def run(target, arguments):
+def run(target, arguments, results_dir):
     size = arguments.get('size', 56)  # Payload size in bytes.
     interval = arguments.get('interval', 0.1)  # Inter-packet wait time, seconds.
     flood = arguments.get('flood', False)  # Send at maximum speed.
@@ -20,5 +20,4 @@ def run(target, arguments):
 
 if __name__ == "__main__":
     args = json.loads(sys.argv[2])
-    results_dir = prepare_for_experiment(args, sys.argv[2], sys.argv[1])
-    run(sys.argv[1], args)
+    run(sys.argv[1], args, sys.argv[3])
