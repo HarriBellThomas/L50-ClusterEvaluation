@@ -74,7 +74,7 @@ def prepare_for_experiment(_id, target, meta):
         results_dir = path.absolute().as_posix()
 
         # Write per-run explainer.
-        f = open("{}/results/data/{}/explain".format(script_dir, _id), "w")
+        f = open("{}/results/data/{}/{}/explain".format(script_dir, i, _id), "w")
         f.write("{} -> {}\nDescription: {}\nTime: {}\nArgs: {}".format(
             str(socket.gethostbyname(socket.gethostname())), str(target), 
             _desc, _time, json.dumps(_paramSets[i])
