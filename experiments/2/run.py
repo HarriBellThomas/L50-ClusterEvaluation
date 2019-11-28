@@ -13,7 +13,7 @@ def run(target, arguments, results_dir):
     duration = arguments.get('duration', 5)  # Run for x seconds.
 
     speed = "-f" if flood else "-i {}".format(interval)
-    os.system("sudo ping {} -q -s {} -w {} {} 2>&1 | tee {}/{}/{}/local".format(
+    os.system("sudo ping {} -s {} -w {} {} > {}/{}/{}/local".format(
         speed, size, duration, str(target), results_dir, arguments.get("_run"), str(target)
     ))
 
