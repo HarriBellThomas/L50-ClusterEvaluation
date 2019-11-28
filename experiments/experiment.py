@@ -12,6 +12,7 @@ import uuid
 import pathlib
 import socket
 import smtplib
+import ssl
 from email.message import EmailMessage
 
 
