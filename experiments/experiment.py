@@ -141,7 +141,7 @@ if __name__ == "__main__":
 
     # Init email notifications.
     smtp_pwd = ""
-    if lmk:
+    if args.lmk:
         smtp_pwd = getpass.getpass('Hermes account password: ')
         port = 465 
         context = ssl.create_default_context()
