@@ -13,19 +13,20 @@ import pathlib
 import socket
 
 #
-def run_experiment(targets, definition)
+def run_experiment(targets, definition):
     experiment_source = definition.get("src", definition.get("id", -1))
     if validate_experiment(experiment_source):
         # Init experiment.
-        exp_num = defition.get("id", -1)
+        exp_num = definition.get("id", -1)
         print("---[BEGIN EXPERIMENT]---\n")
         _id = str(uuid.uuid4())  # Unique ID to track experiment. 
-        results_dir = prepare_for_experiment(_id, target, definition)
+        results_dir = prepare_for_experiment(_id, ", ".join(targets), definition)
 
         # Iterate over arguments variations.
         argument_sets = definition.get('parameters', [[]])
         for i in range(len(argument_sets)): 
-            args = argument_sets[i]
+            _args = argument_sets[i]
+            args = _args
             args["_id"] = _id
             args["_run"] = i
             args["_desc"] = definition.get('description', '(none)')
@@ -35,6 +36,7 @@ def run_experiment(targets, definition)
             # targets_config = definition.get("targets")
             for t in range(len(targets)):
                 target = targets[t]
+                prepare_for_target(_id, i, t, definition, _args)
                 print("-- Experiment {}.{}.{} --".format(exp_num, t, i))
                 print("Target: {}".format(target))
                 print("Description: {}".format(definition.get('description', '(none)')))
@@ -70,12 +72,11 @@ def get_all_experiments():
     return range(1, current)
 
 #
-def prepare_for_experiment(_id, target, meta):
+def prepare_for_experiment(_id, targets, meta):
     _desc = meta.get("description", "(none)")
     _paramSets = meta.get("parameters", [{}])
     _runs = len(_paramSets)
     _time = time.ctime()
-    # TODO: remove _args from output.
     
     script_dir = os.path.dirname(os.path.abspath(__file__))
     for i in range(_runs):
@@ -86,7 +87,7 @@ def prepare_for_experiment(_id, target, meta):
         # Write per-run explainer.
         f = open("{}/results/data/{}/{}/explain".format(script_dir, _id, i), "w+")
         f.write("{} -> {}\nDescription: {}\nTime: {}\nArgs: {}".format(
-            str(socket.gethostbyname(socket.gethostname())), str(target), 
+            str(socket.gethostbyname(socket.gethostname())), str(targets), 
             _desc, _time, json.dumps(_paramSets[i])
         ))
         f.close()
@@ -109,6 +110,25 @@ def prepare_for_experiment(_id, target, meta):
     f.close()
 
     return pathlib.Path("{}/results/data/{}".format(script_dir, _id)).absolute().as_posix()
+
+#
+def prepare_for_target(_id, run, target, meta, parameters):
+    _desc = meta.get("description", "(none)")
+    _runs = len(_paramSets)
+    _time = time.ctime()
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    path = pathlib.Path("{}/results/data/{}/{}/{}".format(script_dir, _id, run, target))
+    path.mkdir(parents=True, exist_ok=True)
+    results_dir = path.absolute().as_posix()
+
+    # Write explainer for target in experiment run.
+    f = open("{}/explain".format(results_dir), "a+")
+    f.write("{} -> {}\nDescription: {}\nTime: {}\nArgs: {}".format(
+        str(socket.gethostbyname(socket.gethostname())), str(target), 
+        _desc, _time, parameters
+    ))
+    f.close()
 
 #
 if __name__ == "__main__":
