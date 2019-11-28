@@ -25,8 +25,7 @@ def run_experiment(targets, definition):
         # Iterate over arguments variations.
         argument_sets = definition.get('parameters', [[]])
         for i in range(len(argument_sets)): 
-            _args = argument_sets[i]
-            args = _args
+            args = argument_sets[i].copy()
             args["_id"] = _id
             args["_run"] = i
             args["_desc"] = definition.get('description', '(none)')
@@ -36,7 +35,7 @@ def run_experiment(targets, definition):
             # targets_config = definition.get("targets")
             for t in range(len(targets)):
                 target = targets[t]
-                prepare_for_target(_id, i, target, definition, _args)
+                prepare_for_target(_id, i, target, definition, argument_sets[i])
                 print("-- Experiment {}.{}.{} --".format(exp_num, t, i))
                 print("Target: {}".format(target))
                 print("Description: {}".format(definition.get('description', '(none)')))
