@@ -30,15 +30,15 @@ def run_experiment(exp_num, target, definition):
             args["_desc"] = definition.get('description', '(none)')
             serialised_args = json.dumps(args)
 
-            run_remote_setup(exp_num, target, serialised_args)
+            run_remote_setup(exp_num, target, serialised_args, _id)
             directory = os.path.dirname(os.path.abspath(__file__))
             os.system("python3 {}/{}/run.py {} '{}'".format(
                 directory, exp_num, target, serialised_args
             ))
             time.sleep(2)
-            reset_remote(exp_num, target)
+            reset_remote(exp_num, target, _id)
             print("")
-            
+
         print("---[END EXPERIMENT]---\n")
         print("\nID: {}\n".format(_id))
     else:
