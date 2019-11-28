@@ -42,13 +42,13 @@ def run_experiment(targets, definition):
                 print("Description: {}".format(definition.get('description', '(none)')))
                 print("Argument set: {}".format(args))
 
-                run_remote_setup(source, target, serialised_args, _id)
+                run_remote_setup(experiment_source, target, serialised_args, _id)
                 directory = os.path.dirname(os.path.abspath(__file__))
                 os.system("python3 {}/{}/run.py {} '{}' {}".format(
                     directory, experiment_source, target, serialised_args, results_dir
                 ))
                 time.sleep(2)
-                reset_remote(source, target, _id, i, results_dir)
+                reset_remote(experiment_source, target, _id, i, results_dir)
                 print("")
 
         print("---[END EXPERIMENT]---\n")
