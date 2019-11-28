@@ -52,9 +52,9 @@ def reset_remote(exp_num, target, id, run, results_dir):
         scp = SCPClient(ssh)
         scp.get(
             "/tmp/{}/{}/remote".format(id, run), # from remote
-            "{}/{}/remote".format(results_dir, run) # to local
-            False, # recursive
-            True # preserve_times
+            "{}/{}/remote".format(results_dir, run), # to local
+            recursive=False, # recursive
+            preserve_times=True # preserve_times
         )
 
 
