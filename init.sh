@@ -16,7 +16,7 @@ if [ ! $INITIALISED ] ; then
     # Clean up the terminal to make it nicer to work with.
     echo 'startup_message off' > ~/.screenrc
     echo 'function g() { ssh L50@"10.0.0.$1"; }' > ~/.bash_profile
-    echo 'export PS1="\h \w  "' >> ~/.bash_profile
+    echo 'export PS1="\e[1;92m\h \w  \e[21;97m"' >> ~/.bash_profile
 
     # Get the eth0 IP address.
     export HOST="$(hostname)"
