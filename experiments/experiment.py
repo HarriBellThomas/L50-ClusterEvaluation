@@ -148,10 +148,10 @@ if __name__ == "__main__":
             try:
                 server.login("ahb36", "{}#!".format(smtp_pwd))
             except:
-                echo("SMTP verification failed...")
+                print("SMTP verification failed...")
                 exit(1)
             else:
-                echo("SMTP server verified.")
+                print("SMTP server verified.")
 
     directory = os.path.dirname(os.path.abspath(__file__))
     experiment_data = {}
