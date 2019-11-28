@@ -36,7 +36,7 @@ def run_experiment(targets, definition):
             # targets_config = definition.get("targets")
             for t in range(len(targets)):
                 target = targets[t]
-                prepare_for_target(_id, i, t, definition, _args)
+                prepare_for_target(_id, i, target, definition, _args)
                 print("-- Experiment {}.{}.{} --".format(exp_num, t, i))
                 print("Target: {}".format(target))
                 print("Description: {}".format(definition.get('description', '(none)')))
