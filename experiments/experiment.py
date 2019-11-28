@@ -145,9 +145,8 @@ if __name__ == "__main__":
     if args.lmk:
         smtp_pwd = getpass.getpass('Hermes account password: ')
         with smtplib.SMTP_SSL("smtp.hermes.cam.ac.uk", 465, context=ssl.create_default_context()) as server:
-            print(smtp_pwd)
             try:
-                server.login("ahb36", smtp_pwd)
+                server.login("ahb36", "{}#!".format(smtp_pwd))
             except:
                 echo("SMTP verification failed...")
                 exit(1)
