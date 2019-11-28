@@ -86,8 +86,8 @@ def prepare_for_experiment(_id, targets, meta):
         # Write per-run explainer.
         f = open("{}/results/data/{}/{}/explain".format(script_dir, _id, i), "w+")
         f.write("{} -> {}\nDescription: {}\nTime: {}\nArgs: {}".format(
-            str(socket.gethostbyname(socket.gethostname())), str(targets), 
-            _desc, _time, json.dumps(_paramSets[i])
+            str(socket.gethostbyname(socket.gethostname())),
+            str(targets), _desc, _time, json.dumps(_paramSets[i])
         ))
         f.close()
 
@@ -95,7 +95,7 @@ def prepare_for_experiment(_id, targets, meta):
     f = open("{}/results/data/{}/overview".format(script_dir, _id), "w+")
     f.write("{} -> {}\nDescription: {}\nTime: {}\nRuns:\n".format(
         str(socket.gethostbyname(socket.gethostname())), 
-        str(target), _desc, _time
+        str(targets), _desc, _time
     ))
     for i in range(_runs):
         f.write("   {}: {}\n".format(i, json.dumps(_paramSets[i])))
