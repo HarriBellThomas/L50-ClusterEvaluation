@@ -6,6 +6,9 @@ experiments:
     parameters:
       - { buffer_length: 80000, time: 5 }
       - { buffer_length: 20000, time: 5 }
+    targets:
+      strategy: Each
+      recipientMode: true
   - id: 2
     src: 2
     name: ping

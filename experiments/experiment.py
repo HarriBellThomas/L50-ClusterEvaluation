@@ -11,6 +11,9 @@ import json
 import uuid
 import pathlib
 import socket
+import smtplib
+from email.message import EmailMessage
+
 
 #
 def run_experiment(targets, definition):
@@ -133,6 +136,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Run an experiment.')
     parser.add_argument('-e','--experiment', help='Which experiment to run. Omit to run all.', default=0)
     parser.add_argument('-t','--target', help='Target IP address.', required=True)
+    parser.add_argument('-l','--lmk', help='Email to notify when done.', default=False)
     args = parser.parse_args()
     # pswd = getpass.getpass('SSH password for L50: ')
 
@@ -164,4 +168,14 @@ if __name__ == "__main__":
     else:
         exp_definition = experiment_data.get(int(args.experiment), {})
         run_experiment(targets, exp_definition)
-        
+    
+
+    if args.lmk:
+        msg = EmailMessage()
+        msg.set_content("Test message")
+        msg['Subject'] = f'Test'
+        msg['From'] = "server@L50.cl.cam.ac.uk"
+        msg['To'] = "ahb36@cam.ac.uk"
+        s = smtplib.SMTP('localhost')
+        s.send_message(msg)
+        s.quit()
