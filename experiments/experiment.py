@@ -173,9 +173,9 @@ if __name__ == "__main__":
     if args.lmk:
         msg = EmailMessage()
         msg.set_content("Test message")
-        msg['Subject'] = f'Test'
+        msg['Subject'] = 'Test'
         msg['From'] = "server@L50.cl.cam.ac.uk"
-        msg['To'] = "ahb36@cam.ac.uk"
+        msg['To'] = args.lmk
         s = smtplib.SMTP('localhost')
         s.send_message(msg)
         s.quit()
