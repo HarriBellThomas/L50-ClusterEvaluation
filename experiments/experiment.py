@@ -13,42 +13,52 @@ import pathlib
 import socket
 
 #
-def run_experiment(exp_num, target, definition):
-    if check_experiment_number(exp_num):
-        argument_sets = definition.get('parameters', [[]])
+def run_experiment(targets, definition)
+    experiment_source = definition.get("src", definition.get("id", -1))
+    if validate_experiment(experiment_source):
+        # Init experiment.
+        exp_num = defition.get("id", -1)
         print("---[BEGIN EXPERIMENT]---\n")
         _id = str(uuid.uuid4())  # Unique ID to track experiment. 
         results_dir = prepare_for_experiment(_id, target, definition)
 
+        # Iterate over arguments variations.
+        argument_sets = definition.get('parameters', [[]])
         for i in range(len(argument_sets)): 
             args = argument_sets[i]
-            print("-- Experiment {}.{} --".format(exp_num, i))
-            print("Description: {}".format(definition.get('description', '(none)')))
-            print("Argument set: {}".format(args))
-
             args["_id"] = _id
             args["_run"] = i
             args["_desc"] = definition.get('description', '(none)')
             serialised_args = json.dumps(args)
 
-            run_remote_setup(exp_num, target, serialised_args, _id)
-            directory = os.path.dirname(os.path.abspath(__file__))
-            os.system("python3 {}/{}/run.py {} '{}' {}".format(
-                directory, exp_num, target, serialised_args, results_dir
-            ))
-            time.sleep(2)
-            reset_remote(exp_num, target, _id, i, results_dir)
-            print("")
+            # Coordinate and execute according to target policy.
+            # targets_config = definition.get("targets")
+            for t in range(len(targets)):
+                target = targets[t]
+                print("-- Experiment {}.{}.{} --".format(exp_num, t, i))
+                print("Target: {}".format(target))
+                print("Description: {}".format(definition.get('description', '(none)')))
+                print("Argument set: {}".format(args))
+
+                run_remote_setup(source, target, serialised_args, _id)
+                directory = os.path.dirname(os.path.abspath(__file__))
+                os.system("python3 {}/{}/run.py {} '{}' {}".format(
+                    directory, experiment_source, target, serialised_args, results_dir
+                ))
+                time.sleep(2)
+                reset_remote(source, target, _id, i, results_dir)
+                print("")
 
         print("---[END EXPERIMENT]---\n")
         print("\nID: {}\n".format(_id))
     else:
-        print("Invalid experiment number")
+        print("Invalid experiment source.")
+
 
 #
-def check_experiment_number(exp_num):
+def validate_experiment(source):
     directory = os.path.dirname(os.path.abspath(__file__))
-    return os.path.exists("{}/{}/run.py".format(directory, exp_num))
+    return os.path.exists("{}/{}/run.py".format(directory, source))
 
 #
 def get_all_experiments():
@@ -117,21 +127,23 @@ if __name__ == "__main__":
                 if 'id' in item:
                     experiment_data[item['id']] = item
 
+    # Parse and verify targets.
     targets = [t.strip() for t in args.target.split(",")] if "," in args.target else [args.target]
     for target in targets:
         try:
             ip = IP(target)
-
-            experiment_name = "all experiments" if args.experiment == 0 else "experiment {}".format(args.experiment)
-            print("\nRunning {} against {}...\n".format(experiment_name, ip))
-
-            if args.experiment == 0:
-                for experiment in get_all_experiments():
-                    exp_definition = experiment_data.get(experiment, {})
-                    run_experiment(experiment, target, exp_definition)
-                    time.sleep(0.5) # Increase
-            else:
-                exp_definition = experiment_data.get(int(args.experiment), {})
-                run_experiment(args.experiment, ip, exp_definition)
         except ValueError:
             print("Invalid IP address: {}".format(target))
+
+    experiment_name = "all experiments" if args.experiment == 0 else "experiment {}".format(args.experiment)
+    print("\nRunning {}...\n".format(experiment_name))
+
+    if args.experiment == 0:
+        for experiment in get_all_experiments():
+            exp_definition = experiment_data.get(experiment, {})
+            run_experiment(targets, exp_definition)
+            time.sleep(0.5) # Increase
+    else:
+        exp_definition = experiment_data.get(int(args.experiment), {})
+        run_experiment(targets, exp_definition)
+        

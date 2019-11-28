@@ -6,16 +6,16 @@ import time
 from scp import SCPClient
 
 #
-def run_remote_setup(exp_num, target, args, id):
+def run_remote_setup(source, target, args, id):
     directory = os.path.dirname(os.path.abspath(__file__))
-    if os.path.exists("{}/{}/remote.py".format(directory, exp_num)):
-        print("Setting up remote for experiment {}...".format(exp_num))
+    if os.path.exists("{}/{}/remote.py".format(directory, source)):
+        print("Setting up remote for plan: {}...".format(source))
 
         encodedArgBytes = base64.b64encode(args.encode("utf-8"))
         encodedArgs = str(encodedArgBytes, "utf-8")
         cmd = "tmux kill-session -t evaluation-{} > /dev/null 2>&1; ".format(id)
         cmd = cmd + "tmux new-session -d -s evaluation-{}; ".format(id)
-        cmd = cmd + "tmux send -t evaluation-{} \"python3 ~/x/experiments/{}/remote.py '{}'\" ENTER; ".format(id, exp_num, encodedArgs)
+        cmd = cmd + "tmux send -t evaluation-{} \"python3 ~/x/experiments/{}/remote.py '{}'\" ENTER; ".format(id, source, encodedArgs)
         cmd = cmd + "tmux ls"
 
         ssh = paramiko.SSHClient()
@@ -27,15 +27,15 @@ def run_remote_setup(exp_num, target, args, id):
         print("stderr:  " + str(ssh_stderr.read()))
         ssh.close()
 
-        print("Remote setup complete for experiment {}.\n".format(exp_num))
+        print("Remote setup complete for plan: {}.\n".format(source))
         time.sleep(2)
     else:
-        print("No remote setup for experiment {}.".format(exp_num))
+        print("No remote setup for plan: {}.".format(source))
 
 #
-def reset_remote(exp_num, target, id, run, results_dir):
+def reset_remote(source, target, id, run, results_dir):
     directory = os.path.dirname(os.path.abspath(__file__))
-    if os.path.exists("{}/{}/remote.py".format(directory, exp_num)):
+    if os.path.exists("{}/{}/remote.py".format(directory, source)):
         print("\nResetting evaluation environment for {}...".format(target))
         ssh = paramiko.SSHClient()
         ssh_key = paramiko.RSAKey.from_private_key_file("/home/L50/.ssh/evaluation")
