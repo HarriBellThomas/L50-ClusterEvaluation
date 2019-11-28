@@ -19,7 +19,7 @@ if [ ! $INITIALISED ] ; then
     echo 'function g() { ssh -o StrictHostKeyChecking=no L50@"10.0.0.$1"; }' > ~/.bash_profile
     echo 'export PS1="\e[1;92m\h  \w  \e[21;97m"' >> ~/.bash_profile
     echo 'alias u="cd ~/x; git pull"' >> ~/.bash_profile
-    echo 'function e() { cd ~/x/experiments; python3 experiment.py -e $1 -t "10.0.0.$2"; }' > ~/.bash_profile
+    echo 'function e() { cd ~/x/experiments; python3 experiment.py -e $1 -t "10.0.0.$2"; }' >> ~/.bash_profile
     source ~/.bash_profile
 
     # Get the eth0 IP address.
