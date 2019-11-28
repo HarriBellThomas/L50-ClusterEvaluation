@@ -138,7 +138,16 @@ if __name__ == "__main__":
     parser.add_argument('-t','--target', help='Target IP address.', required=True)
     parser.add_argument('-l','--lmk', help='Email to notify when done.', default=False)
     args = parser.parse_args()
-    # pswd = getpass.getpass('SSH password for L50: ')
+
+    # Init email notifications.
+    smtp_pwd = ""
+    if lmk:
+        smtp_pwd = getpass.getpass('Hermes account password: ')
+        port = 465 
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL("smtp.hermes.cam.ac.uk", port, context=context) as server:
+            server.login("ahb36", smtp_pwd)
+            echo("SMTP server verified.")
 
     directory = os.path.dirname(os.path.abspath(__file__))
     experiment_data = {}
@@ -176,6 +185,9 @@ if __name__ == "__main__":
         msg['Subject'] = 'Test'
         msg['From'] = "server@L50.cl.cam.ac.uk"
         msg['To'] = args.lmk
-        s = smtplib.SMTP('localhost')
-        s.send_message(msg)
-        s.quit()
+
+        port = 465 
+        context = ssl.create_default_context()
+        with smtplib.SMTP_SSL("smtp.hermes.cam.ac.uk", port, context=context) as server:
+            server.login("ahb36", password)
+            server.send_message(msg)
