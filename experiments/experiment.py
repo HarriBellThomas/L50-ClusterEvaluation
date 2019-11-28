@@ -14,6 +14,7 @@ import socket
 import smtplib
 import ssl
 from email.message import EmailMessage
+import datetime
 
 
 #
@@ -173,6 +174,7 @@ if __name__ == "__main__":
     experiment_name = "all experiments" if args.experiment == 0 else "experiment {}".format(args.experiment)
     print("\nRunning {}...\n".format(experiment_name))
 
+    start = datetime.datetime.now().replace(microsecond=0)
     if args.experiment == 0:
         for experiment in get_all_experiments():
             exp_definition = experiment_data.get(experiment, {})
@@ -182,12 +184,14 @@ if __name__ == "__main__":
         exp_definition = experiment_data.get(int(args.experiment), {})
         run_experiment(targets, exp_definition)
     
-
+    end = datetime.datetime.now().replace(microsecond=0)
+    print("Duration: {}".format((end-start)))
+    
     if args.lmk:
         msg = EmailMessage()
-        msg.set_content("Test message")
-        msg['Subject'] = 'Test'
-        msg['From'] = "l50-reporter@cl.cam.ac.uk"
+        msg.set_content("Yay!\nDuration: {}".format((end-start)))
+        msg['Subject'] = 'L50 Run Complete'
+        msg['From'] = "ahb36@cam.ac.uk"
         msg['To'] = args.lmk
 
         port = 465 
