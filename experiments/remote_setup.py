@@ -14,7 +14,7 @@ def run_remote_setup(exp_num, target, args, id):
         encodedArgs = str(encodedArgBytes, "utf-8")
         cmd = "tmux kill-session -t evaluation-{} > /dev/null 2>&1; ".format(id)
         cmd = cmd + "tmux new-session -d -s evaluation-{}; ".format(id)
-        cmd = cmd + "tmux send -t evaluation-{} \"python3 ~/L50-ClusterEvaluation/experiments/{}/remote.py '{}'\" ENTER; ".format(id, exp_num, encodedArgs)
+        cmd = cmd + "tmux send -t evaluation-{} \"python3 ~/x/experiments/{}/remote.py '{}'\" ENTER; ".format(id, exp_num, encodedArgs)
         cmd = cmd + "tmux ls"
 
         ssh = paramiko.SSHClient()
