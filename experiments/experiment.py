@@ -114,7 +114,6 @@ def prepare_for_experiment(_id, targets, meta):
 #
 def prepare_for_target(_id, run, target, meta, parameters):
     _desc = meta.get("description", "(none)")
-    _runs = len(_paramSets)
     _time = time.ctime()
     script_dir = os.path.dirname(os.path.abspath(__file__))
 
