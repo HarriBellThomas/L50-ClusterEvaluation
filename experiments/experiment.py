@@ -193,5 +193,5 @@ if __name__ == "__main__":
         port = 465 
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL("smtp.hermes.cam.ac.uk", port, context=context) as server:
-            server.login("ahb36", password)
+            server.login("ahb36", "{}#!".format(smtp_pwd))
             server.send_message(msg)
