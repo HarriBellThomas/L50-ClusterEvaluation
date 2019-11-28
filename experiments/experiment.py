@@ -82,18 +82,18 @@ def prepare_for_experiment(_id, target, meta):
         f.close()
 
     # Write top level explainer.
-    f = open("{}/results/data/{}/explain".format(script_dir, _id), "w")
-    f.write("{} -> {}\nDescription: {}\nTime: {}\nRuns:".format(
+    f = open("{}/results/data/{}/overview".format(script_dir, _id), "w")
+    f.write("{} -> {}\nDescription: {}\nTime: {}\nRuns:\n".format(
         str(socket.gethostbyname(socket.gethostname())), 
         str(target), _desc, _time
     ))
     for i in range(_runs):
-        f.write("   {}: {}".format(i, json.dumps(_paramSets[i])))
+        f.write("   {}: {}\n".format(i, json.dumps(_paramSets[i])))
     f.close()
 
     # Append to experiment log.
     f = open("{}/results/contents".format(script_dir), "a+")
-    f.write("{}  {}  {}".format(
+    f.write("{}  {}  {}\n".format(
         meta.get('name', '(none)'), _time, _id
     ))
     f.close()
