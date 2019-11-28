@@ -144,11 +144,15 @@ if __name__ == "__main__":
     smtp_pwd = ""
     if args.lmk:
         smtp_pwd = getpass.getpass('Hermes account password: ')
-        port = 465 
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL("smtp.hermes.cam.ac.uk", port, context=context) as server:
-            server.login("ahb36", smtp_pwd)
-            echo("SMTP server verified.")
+        with smtplib.SMTP_SSL("smtp.hermes.cam.ac.uk", 465, context=ssl.create_default_context()) as server:
+            print(smtp_pwd)
+            try:
+                server.login("ahb36", smtp_pwd)
+            except:
+                echo("SMTP verification failed...")
+                exit(1)
+            else:
+                echo("SMTP server verified.")
 
     directory = os.path.dirname(os.path.abspath(__file__))
     experiment_data = {}
