@@ -56,6 +56,7 @@ def reset_remote(exp_num, target, id, run, results_dir):
             recursive=False, # recursive
             preserve_times=True # preserve_times
         )
+        ssh.exec_command("rm -rf /tmp/{}".format(id), get_pty=True)
 
 
         ssh.close()
