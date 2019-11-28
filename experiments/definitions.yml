@@ -12,3 +12,6 @@ experiments:
     description: Get RTT times between hosts using ping.
     parameters:
       - { size: 100, interval: 0.1, flood: false, duration: 10 }
+      - { size: 100, interval: 0.1, flood: true, duration: 10 }
+      - { size: 500, interval: 0.1, flood: false, duration: 10 }
+      - { size: 500, interval: 0.1, flood: true, duration: 10 }
