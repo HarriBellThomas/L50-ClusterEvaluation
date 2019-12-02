@@ -47,7 +47,7 @@ if __name__ == "__main__":
             experiments_dir, _id, args.origindir, my_ip
         ))
     else:
-        to_copy = glob.glob("{}/results/data/{}-*".format(experiments_dir))
+        to_copy = glob.glob("{}/results/data/{}-*".format(experiments_dir, _id))
         for dir in to_copy:
             print(dir)
             print(os.path.basename(dir))
