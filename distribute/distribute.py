@@ -30,7 +30,7 @@ if __name__ == "__main__":
     d_path = pathlib.Path("{}/results/{}".format(script_dir, "d{}".format(distribution_num)))
     d_path.mkdir(parents=True, exist_ok=True)
     distribution_dir = d_path.absolute().as_posix()
-    print("ID: d{} ({})".format(distribution_num), _id)
+    print("ID: d{} ({})".format(distribution_num, _id))
     print(distribution_dir)
 
     my_ip = str(socket.gethostbyname(socket.gethostname()))
