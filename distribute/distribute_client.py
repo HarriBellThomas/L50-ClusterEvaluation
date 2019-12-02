@@ -7,6 +7,7 @@ import pathlib
 import socket
 from IPy import IP
 import uuid
+import paramiko
 
 #
 if __name__ == "__main__":
