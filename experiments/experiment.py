@@ -179,11 +179,11 @@ if __name__ == "__main__":
     if args.experiment == 0:
         for experiment in get_all_experiments():
             exp_definition = experiment_data.get(experiment, {})
-            run_experiment(targets, exp_definition, "{}:experiment-{}".format(_id, experiment))
+            run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, experiment))
             time.sleep(2)
     else:
         exp_definition = experiment_data.get(int(args.experiment), {})
-        run_experiment(targets, exp_definition, "{}:experiment-{}".format(_id, args.experiment))
+        run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, args.experiment))
     
     end = datetime.datetime.now().replace(microsecond=0)
     print("Duration: {}".format((end-start)))
