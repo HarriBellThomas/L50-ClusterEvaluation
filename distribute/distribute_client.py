@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
         cmd = "tmux kill-session -t dist-evaluation-{} > /dev/null 2>&1; ".format(_id)
         cmd = cmd + "tmux new-session -d -s dist-evaluation-{}; ".format(_id)
-        cmd = cmd + "tmux send -t dist-evaluation-{} \"python3 ~/x/distribute/distribute_client.py {}\" ENTER; ".format(
+        cmd = cmd + "tmux send -t dist-evaluation-{} \"python3 ~/x/distribute/distribute_client.py {}; exit\" ENTER; ".format(
             _id, " ".join([
                 "-e {}".format(args.experiment), # Experiments to run.
                 "-t {}".format(args.target), # Target IPs.
