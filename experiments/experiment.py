@@ -177,7 +177,7 @@ if __name__ == "__main__":
     start = datetime.datetime.now().replace(microsecond=0)
     _id = args.uuid
     if int(args.experiment) == 0:
-        for experiment in get_all_experiments():
+        for experiment in experiment_data.keys():
             exp_definition = experiment_data.get(experiment, {})
             run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, experiment))
             time.sleep(2)
