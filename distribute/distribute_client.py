@@ -17,11 +17,14 @@ if __name__ == "__main__":
     parser.add_argument('-o','--origin', help='IP of the master node.', required=True)
     parser.add_argument('-d','--origindir', help='Directory to store results on the master.', required=True)
     parser.add_argument('-r','--remaining', help='IPs of the nodes remaining in the queue.', default=[])
+    parser.add_argument('-i','--uuid', help='UUID to set for this set of experiments.', default=str(uuid.uuid4()))
     args = parser.parse_args()
 
     my_ip = str(socket.gethostbyname(socket.gethostname()))
     local = args.origin == my_ip
+    print("distribute_client for {}...".format(args.uuid))
     print(args)
+    print("")
 
     # Find experiment.py
     script_dir_parent = dirname(dirname(abspath(__file__)))
@@ -29,7 +32,7 @@ if __name__ == "__main__":
     experiments_dir = experiments_dir_path.absolute().as_posix()
 
     # Run experiments.
-    _id = str(uuid.uuid4())
+    _id = args.uuid
     os.system("python3 {}/experiment.py {} {}".format(
         experiments_dir,
         "-e {}".format(args.experiment),

@@ -5,6 +5,7 @@ import time
 import pathlib
 import socket
 from IPy import IP
+import uuid
 
 
 #
@@ -25,10 +26,11 @@ if __name__ == "__main__":
     while(pathlib.Path("{}/results/{}".format(script_dir, "d{}".format(distribution_num))).exists()):
         distribution_num = distribution_num + 1
 
+    _id = str(uuid.uuid4())
     d_path = pathlib.Path("{}/results/{}".format(script_dir, "d{}".format(distribution_num)))
     d_path.mkdir(parents=True, exist_ok=True)
     distribution_dir = d_path.absolute().as_posix()
-    print("ID: d{}".format(distribution_num))
+    print("ID: d{} ({})".format(distribution_num), _id)
     print(distribution_dir)
 
     my_ip = str(socket.gethostbyname(socket.gethostname()))
@@ -49,11 +51,12 @@ if __name__ == "__main__":
 
 
     # python3 distribute_client.py /tmp/path 10.0.0.4,10.0.0.5 
-    os.system("python3 {}/distribute_client.py {} {} {} {} {}".format(
+    os.system("python3 {}/distribute_client.py {} {} {} {} {} {}".format(
         script_dir,
         "-e {}".format(args.experiment), # Experiments to run.
         "-t {}".format(",".join([my_ip, *targets])), # Target IPs.
         "-o {}".format(my_ip),
         "-d {}".format(distribution_dir),
-        "-r {}".format(",".join(targets))
+        "-r {}".format(",".join(targets)),
+        "-i {}".format(_id)
     ))

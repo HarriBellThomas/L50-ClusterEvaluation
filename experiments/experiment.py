@@ -178,6 +178,8 @@ if __name__ == "__main__":
 
     start = datetime.datetime.now().replace(microsecond=0)
     _id = args.uuid
+    print("Experiment {}".format(_id))
+
     if int(args.experiment) == 0:
         for experiment in experiment_data.keys():
             exp_definition = experiment_data.get(experiment, {})
