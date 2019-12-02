@@ -1,5 +1,5 @@
 experiments:
-  - id: 1
+  - id: 1  # ~1 minute
     src: 1
     name: iperf
     description: Run iperf experiments between the two hosts. 
