@@ -52,8 +52,8 @@ if __name__ == "__main__":
             print(dir)
             os.system("eval `ssh-agent -s`; ssh-add ~/.ssh/evaluation")
             os.system("ssh -o StrictHostKeyChecking=no L50@{} 'mkdir -p {}/{}/{}'".format(args.origin, args.origindir, my_ip, os.path.basename(dir)))
-            os.system("scp -rp {} L50@{}:{}/{}/{}".format(
-                dir, args.origin, args.origindir, my_ip, os.path.basename(dir)
+            os.system("scp -rp {} L50@{}:{}/{}/".format(
+                dir, args.origin, args.origindir, my_ip
             ))
     
     # Invoke next in chain.

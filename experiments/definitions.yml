@@ -11,7 +11,7 @@ experiments:
     targets:
       strategy: Each
       recipientMode: true
-  - id: 2
+  - id: 2  # ~1.5 minutes
     src: 2
     name: ping
     description: Get RTT times between hosts using ping.
@@ -29,7 +29,7 @@ experiments:
       - { duration: 10, interval: 0.01 }
       - { duration: 10, flood: true } 
 
-  - id: 3
+  - id: 3  # ~30 seconds
     src: 3
     name: traceroute
     description: Run traceroute between hosts.
