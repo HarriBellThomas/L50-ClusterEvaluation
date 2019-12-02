@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser.add_argument('-l','--lmk', help='Email to notify when done.', default=False)
     parser.add_argument('-o','--origin', help='IP of the master node.', required=True)
     parser.add_argument('-d','--origindir', help='Directory to store results on the master.', required=True)
-    parser.add_argument('-r','--remaining', help='IPs of the nodes remaining in the queue.', default=[])
+    parser.add_argument('-r','--remaining', help='IPs of the nodes remaining in the queue.', default="")
     parser.add_argument('-i','--uuid', help='UUID to set for this set of experiments.', default=str(uuid.uuid4()))
     args = parser.parse_args()
 
@@ -46,7 +46,7 @@ if __name__ == "__main__":
             experiments_dir, _id, args.origindir, my_ip
         ))
     else:
-        os.system("scp -r {}/results/data/{}-* L50@{}:{}/{}".format(
+        os.system("scp -rp {}/results/data/{}-* L50@{}:{}/{}".format(
             experiments_dir, _id, args.origin, args.origindir, my_ip
         ))
     
