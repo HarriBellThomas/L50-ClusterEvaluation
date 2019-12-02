@@ -10,7 +10,6 @@ def run(target, arguments, results_dir):
     time = arguments.get('time', 5)
     udp = arguments.get('udp', False)
     os.system("iperf {} 2>&1 | tee {}/{}/{}/local".format(
-        time, str(target), buffer_length, 
         " ".join([
             "-u" if udp else ""
             "-i 1",
