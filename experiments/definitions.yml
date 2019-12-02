@@ -4,14 +4,14 @@ experiments:
     name: iperf
     description: Run iperf experiments between the two hosts. 
     parameters:
-      - { buffer_length: 80000, time: 15 }
-      - { buffer_length: 20000, time: 15 }
-      - { buffer_length: 80000, time: 15, udp: true }
-      - { buffer_length: 20000, time: 15, udp: true }
-      - { buffer_length: 80000, time: 15, bidir: true }
-      - { buffer_length: 20000, time: 15, bidir: true }
-      - { buffer_length: 80000, time: 15, udp: true, bidir: true }
-      - { buffer_length: 20000, time: 15, udp: true, bidir: true }
+      - { buffer_length: 65000, time: 15 }
+      - { buffer_length: 6500, time: 15 }
+      - { buffer_length: 65000, time: 15, udp: true }
+      - { buffer_length: 6500, time: 15, udp: true }
+      - { buffer_length: 65000, time: 15, bidir: true }
+      - { buffer_length: 6500, time: 15, bidir: true }
+      - { buffer_length: 65000, time: 15, udp: true, bidir: true }
+      - { buffer_length: 6500, time: 15, udp: true, bidir: true }
     targets:
       strategy: Each
       recipientMode: true
