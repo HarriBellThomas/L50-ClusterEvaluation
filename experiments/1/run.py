@@ -9,7 +9,7 @@ def run(target, arguments, results_dir):
     buffer_length = arguments.get('buffer_length', 80000)
     time = arguments.get('time', 5)
     udp = arguments.get('udp', False)
-    bidirectional = argument.get("bidir", False)
+    bidirectional = arguments.get("bidir", False)
     os.system("sudo iperf3 {} 2>&1 | tee {}/{}/{}/local".format(
         " ".join([
             "-u -b 1000m" if udp else ""
