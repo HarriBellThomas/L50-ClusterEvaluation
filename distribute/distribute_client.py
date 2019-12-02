@@ -50,7 +50,7 @@ if __name__ == "__main__":
         to_copy = glob.glob("{}/results/data/{}-*".format(experiments_dir, _id))
         for dir in to_copy:
             print(dir)
-            print(os.path.basename(dir))
+            os.system("ssh L50@{} 'mkdir {}/{}/{}'".format(args.origin, args.origindir, my_ip, os.path.basename(dir)))
             os.system("scp -rp {} L50@{}:{}/{}/{}".format(
                 dir, args.origin, args.origindir, my_ip, os.path.basename(dir)
             ))
