@@ -166,10 +166,11 @@ if __name__ == "__main__":
     # Parse and verify targets.
     targets = [t.strip() for t in args.target.split(",")] if "," in args.target else [args.target]
     for target in targets:
-        try:
-            ip = IP(target)
-        except ValueError:
-            print("Invalid IP address: {}".format(target))
+        if target != str(socket.gethostbyname(socket.gethostname())):
+            try:
+                ip = IP(target)
+            except ValueError:
+                print("Invalid IP address: {}".format(target))
 
     experiment_name = "all experiments" if args.experiment == 0 else "experiment {}".format(args.experiment)
     print("\nRunning {}...\n".format(experiment_name))
