@@ -9,14 +9,16 @@ def run(target, arguments, results_dir):
     buffer_length = arguments.get('buffer_length', 80000)
     time = arguments.get('time', 5)
     udp = arguments.get('udp', False)
+    bidirectional = argument.get("bidir", False)
     os.system("sudo iperf3 {} 2>&1 | tee {}/{}/{}/local".format(
         " ".join([
-            "-u" if udp else ""
-            "-i 1",
+            "-u -b 1000m" if udp else ""
+            "-i 0.5",
             "-t {}".format(time),
             "-f m",
             "-l {}".format(buffer_length),
-            "-c {}".format(str(target))
+            "-c {}".format(str(target)),
+            "--bidir" if bidirectional else ""
         ]),
         results_dir, arguments.get("_run"), str(target)
     ))

@@ -23,5 +23,7 @@ for param_set in parameter_sets:
             print("ping -> {}: {}".format(t.split("/")[-1], parse_iperf_local("{}/local".format(t))))
     
 
+# def 
+
 # print("{} -> {}".format(input, output))
 # parse_iperf_local("{}/local".format(input))
