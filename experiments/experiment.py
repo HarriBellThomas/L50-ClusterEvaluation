@@ -138,8 +138,9 @@ if __name__ == "__main__":
     parser.add_argument('-e','--experiment', help='Which experiment to run. Omit to run all.', default=0)
     parser.add_argument('-t','--target', help='Target IP address.', required=True)
     parser.add_argument('-l','--lmk', help='Email to notify when done.', default=False)
-    parser.add_argument('-i','--uuid', help='(Internal use) Sets the UUID for the experiment.', default=str(uuid.uuid4()))
+    parser.add_argument('-i','--uuid', help='(Internal use) Sets the UUID for the experiment.', default=False)
     args = parser.parse_args()
+    print(args)
 
     # Init email notifications.
     smtp_pwd = ""
@@ -177,7 +178,7 @@ if __name__ == "__main__":
     print("\nRunning {}...\n".format(experiment_name))
 
     start = datetime.datetime.now().replace(microsecond=0)
-    _id = args.uuid
+    _id = args.uuid if args.uuid else str(uuid.uuid4())
     print("Experiment {}".format(_id))
 
     if int(args.experiment) == 0:
