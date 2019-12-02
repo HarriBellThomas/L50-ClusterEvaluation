@@ -164,11 +164,12 @@ if __name__ == "__main__":
                     experiment_data[item['id']] = item
 
     # Parse and verify targets.
-    targets = [t.strip() for t in args.target.split(",")] if "," in args.target else [args.target]
-    for target in targets:
+    targets = []
+    for target in ([t.strip() for t in args.target.split(",")] if "," in args.target else [args.target]):
         if target != str(socket.gethostbyname(socket.gethostname())):
             try:
                 ip = IP(target)
+                targets.append(target)
             except ValueError:
                 print("Invalid IP address: {}".format(target))
 
