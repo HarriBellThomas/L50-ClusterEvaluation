@@ -50,6 +50,7 @@ if __name__ == "__main__":
         to_copy = glob.glob("{}/results/data/{}-*".format(experiments_dir, _id))
         for dir in to_copy:
             print(dir)
+            os.system("eval `ssh-agent -s`; ssh-add ~/.ssh/evaluation")
             os.system("ssh L50@{} 'mkdir -p {}/{}/{}'".format(args.origin, args.origindir, my_ip, os.path.basename(dir)))
             os.system("scp -rp {} L50@{}:{}/{}/{}".format(
                 dir, args.origin, args.origindir, my_ip, os.path.basename(dir)
@@ -63,7 +64,7 @@ if __name__ == "__main__":
 
         cmd = "tmux kill-session -t dist-evaluation-{} > /dev/null 2>&1; ".format(_id)
         cmd = cmd + "tmux new-session -d -s dist-evaluation-{}; ".format(_id)
-        cmd = cmd + "tmux send -t dist-evaluation-{} \"python3 ~/x/distribute/distribute_client.py {}\" ENTER; ".format(
+        cmd = cmd + "tmux send -t dist-evaluation-{} \"eval `ssh-agent -s`; ssh-add ~/.ssh/evaluation; python3 ~/x/distribute/distribute_client.py {}; exit\" ENTER; ".format(
             _id, " ".join([
                 "-e {}".format(args.experiment), # Experiments to run.
                 "-t {}".format(args.target), # Target IPs.
