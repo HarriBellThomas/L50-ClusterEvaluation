@@ -40,6 +40,44 @@ if __name__ == "__main__":
         "-i {}".format(_id)
     ))
 
-    os.system("cp -r {}/results/data/{}-* {}/{}".format(
-        experiments_dir, _id, args.origindir, my_ip
-    ))
+    if local:
+        os.system("cp -r {}/results/data/{}-* {}/{}".format(
+            experiments_dir, _id, args.origindir, my_ip
+        ))
+    else:
+        os.system("scp -r {}/results/data/{}-* L50@{}:{}/{}".format(
+            experiments_dir, _id, args.origin, args.origindir, my_ip
+        )
+    
+    # Invoke next in chain.
+    remaining = args.remaining.split(",")
+    if(len(remaining[0]) > 0):
+        next = remaining.pop(0)
+        print("\n\nNext up is {}\n\n".format(next))
+
+        cmd = "tmux kill-session -t dist-evaluation-{} > /dev/null 2>&1; ".format(_id)
+        cmd = cmd + "tmux new-session -d -s dist-evaluation-{}; ".format(_id)
+        cmd = cmd + "tmux send -t dist-evaluation-{} \"python3 ~/x/distribute/distribute_client.py {}\" ENTER; ".format(
+            _id, source, " ".join([
+                "-e {}".format(args.experiment), # Experiments to run.
+                "-t {}".format(args.target), # Target IPs.
+                "-o {}".format(args.origin),
+                "-d {}".format(args.origindir),
+                "-r {}".format(",".join(remaining)),
+                "-i {}".format(_id)
+            ])
+        )
+        cmd = cmd + "tmux ls"
+
+        ssh = paramiko.SSHClient()
+        ssh_key = paramiko.RSAKey.from_private_key_file("/home/L50/.ssh/evaluation")
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(str(next), username='L50', pkey=ssh_key)
+        ssh_stdin, ssh_stdout, ssh_stderr = ssh.exec_command(cmd, get_pty=True)
+        print("stdout:  " + str(ssh_stdout.read()))
+        print("stderr:  " + str(ssh_stderr.read()))
+        ssh.close()
+
+    else:
+        print("No hosts remaining. Terminate here.")
+
