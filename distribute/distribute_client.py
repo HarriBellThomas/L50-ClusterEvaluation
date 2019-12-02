@@ -33,7 +33,7 @@ if __name__ == "__main__":
 
     # Run experiments.
     _id = args.uuid
-    os.system("python3 {}/experiment.py {} {}".format(
+    os.system("python3 {}/experiment.py {} {} {}".format(
         experiments_dir,
         "-e {}".format(args.experiment),
         "-t {}".format(args.target),
