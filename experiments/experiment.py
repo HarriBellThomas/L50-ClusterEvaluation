@@ -139,6 +139,7 @@ if __name__ == "__main__":
     parser.add_argument('-e','--experiment', help='Which experiment to run. Omit to run all.', default=0)
     parser.add_argument('-t','--target', help='Target IP address.', required=True)
     parser.add_argument('-l','--lmk', help='Email to notify when done.', default=False)
+    parser.add_argument('-i','--uuid', help='(Internal use) Sets the UUID for the experiment.', default=False)
     args = parser.parse_args()
 
     # Init email notifications.
