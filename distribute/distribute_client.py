@@ -26,7 +26,7 @@ if __name__ == "__main__":
     # Find experiment.py
     script_dir_parent = dirname(dirname(abspath(__file__)))
     experiments_dir_path = pathlib.Path("{}/experiments".format(script_dir_parent))
-    experiments_dir = experiments_dir.absolute().as_posix()
+    experiments_dir = experiments_dir_path.absolute().as_posix()
 
     # Run experiments.
     _id = str(uuid.uuid4())
