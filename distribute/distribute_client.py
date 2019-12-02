@@ -47,7 +47,7 @@ if __name__ == "__main__":
     else:
         os.system("scp -r {}/results/data/{}-* L50@{}:{}/{}".format(
             experiments_dir, _id, args.origin, args.origindir, my_ip
-        )
+        ))
     
     # Invoke next in chain.
     remaining = args.remaining.split(",")
