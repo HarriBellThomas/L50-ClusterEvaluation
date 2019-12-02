@@ -10,11 +10,19 @@ def run(target, arguments, results_dir):
     size = arguments.get('size', 56)  # Payload size in bytes.
     interval = arguments.get('interval', 0.1)  # Inter-packet wait time, seconds.
     flood = arguments.get('flood', False)  # Send at maximum speed.
-    duration = arguments.get('duration', 5)  # Run for x seconds.
+    iterations = arguments.get("iterations", 1000)  # Send x pings.
+    duration = arguments.get("duration", False)  # Send for x seconds.
 
     speed = "-f" if flood else "-i {}".format(interval)
-    os.system("sudo ping {} -s {} -w {} {} > {}/{}/{}/local".format(
-        speed, size, duration, str(target), results_dir, arguments.get("_run"), str(target)
+    os.system("sudo ping {} {} > {}/{}/{}/local".format(
+        " ".join([
+            "-s {}".format(size),
+            "-n {}".format(iterations) if not duration else "",
+            "-w {}".format(duration) if duration else "",
+            "-l {}".format(size),
+            "-f" if flood else ""
+        ]),
+        str(target), results_dir, arguments.get("_run"), str(target)
     ))
 
 

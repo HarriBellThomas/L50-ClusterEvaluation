@@ -8,8 +8,18 @@ import json
 def run(target, arguments, results_dir):
     buffer_length = arguments.get('buffer_length', 80000)
     time = arguments.get('time', 5)
-    os.system("iperf -i 1 -t {} -f m -c {} -l {} 2>&1 | tee {}/{}/{}/local".format(
-        time, str(target), buffer_length, results_dir, arguments.get("_run"), str(target)
+    udp = arguments.get('udp', False)
+    os.system("iperf {} 2>&1 | tee {}/{}/{}/local".format(
+        time, str(target), buffer_length, 
+        " ".join([
+            "-u" if udp else ""
+            "-i 1",
+            "-t {}".format(time),
+            "-f m",
+            "-l {}".format(buffer_length),
+            "-c {}".format(str(target))
+        ]),
+        results_dir, arguments.get("_run"), str(target)
     ))
 
 

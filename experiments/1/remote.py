@@ -16,5 +16,10 @@ path = pathlib.Path("/tmp/{}/{}".format(args.get("_id"), args.get("_run")))
 path.mkdir(parents=True, exist_ok=True)
 results_dir = path.absolute().as_posix()
 
+udp = args.get("udp", False)
+
 print("Running iperf...")
-os.system("iperf -s -i 1 -f m >> {}/remote".format(results_dir))
+os.system("iperf {} -s -i 1 -f m >> {}/remote".format(
+    "-u" if udp else "", 
+    results_dir
+))

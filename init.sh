@@ -12,6 +12,8 @@ if [ ! $INITIALISED ] ; then
     eval "$(ssh-agent -s)"
     ssh-add ~/.ssh/evaluation
     touch ~/.ssh/config && echo "IdentityFile ~/.ssh/evaluation" > ~/.ssh/config
+    cat ~/.ssh/evaluation.pub >> ~/.ssh/authorized_keys
+
 
     # Clean up the terminal to make it nicer to work with.
     touch ~/.hushlogin

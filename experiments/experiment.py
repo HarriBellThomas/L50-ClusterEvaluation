@@ -40,7 +40,7 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
             for t in range(len(targets)):
                 target = targets[t]
                 prepare_for_target(_id, i, target, definition, argument_sets[i])
-                print("-- Experiment {}.{}.{} --".format(exp_num, t, i))
+                print("-- Experiment {}.{}.{} --".format(exp_num, i, t))
                 print("Target: {}".format(target))
                 print("Description: {}".format(definition.get('description', '(none)')))
                 print("Argument set: {}".format(args))
