@@ -18,13 +18,12 @@ import datetime
 
 
 #
-def run_experiment(targets, definition):
+def run_experiment(targets, definition, _id=str(uuid.uuid4())):
     experiment_source = definition.get("src", definition.get("id", -1))
     if validate_experiment(experiment_source):
         # Init experiment.
         exp_num = definition.get("id", -1)
         print("---[BEGIN EXPERIMENT]---\n")
-        _id = str(uuid.uuid4())  # Unique ID to track experiment. 
         results_dir = prepare_for_experiment(_id, ", ".join(targets), definition)
 
         # Iterate over arguments variations.
@@ -176,14 +175,15 @@ if __name__ == "__main__":
     print("\nRunning {}...\n".format(experiment_name))
 
     start = datetime.datetime.now().replace(microsecond=0)
+    _id = str(uuid.uuid4())
     if args.experiment == 0:
         for experiment in get_all_experiments():
             exp_definition = experiment_data.get(experiment, {})
-            run_experiment(targets, exp_definition)
-            time.sleep(0.5) # Increase
+            run_experiment(targets, exp_definition, "{}:experiment-{}".format(_id, experiment))
+            time.sleep(2)
     else:
         exp_definition = experiment_data.get(int(args.experiment), {})
-        run_experiment(targets, exp_definition)
+        run_experiment(targets, exp_definition, "{}:experiment-{}".format(_id, args.experiment))
     
     end = datetime.datetime.now().replace(microsecond=0)
     print("Duration: {}".format((end-start)))
