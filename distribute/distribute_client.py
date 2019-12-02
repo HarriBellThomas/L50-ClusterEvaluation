@@ -51,7 +51,7 @@ if __name__ == "__main__":
         for dir in to_copy:
             print(dir)
             os.system("eval `ssh-agent -s`; ssh-add ~/.ssh/evaluation")
-            os.system("ssh L50@{} 'mkdir -p {}/{}/{}'".format(args.origin, args.origindir, my_ip, os.path.basename(dir)))
+            os.system("ssh -o StrictHostKeyChecking=accept-new L50@{} 'mkdir -p {}/{}/{}'".format(args.origin, args.origindir, my_ip, os.path.basename(dir)))
             os.system("scp -rp {} L50@{}:{}/{}/{}".format(
                 dir, args.origin, args.origindir, my_ip, os.path.basename(dir)
             ))
