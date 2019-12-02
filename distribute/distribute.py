@@ -32,14 +32,17 @@ if __name__ == "__main__":
     distribution_dir = d_path.absolute().as_posix()
     print("ID: d{} ({})".format(distribution_num, _id))
     print(distribution_dir)
-
+    
     my_ip = str(socket.gethostbyname(socket.gethostname()))
+    pathlib.Path("{}/results/{}/{}".format(script_dir, "d{}".format(distribution_num), my_ip)).mkdir(parents=True, exist_ok=True)
+
     targets = []
     for t in args.target.split(","):
         if t != my_ip:
             try:
                 ip = IP(t)
                 targets.append(t)
+                pathlib.Path("{}/results/{}/{}".format(script_dir, "d{}".format(distribution_num), t))
             except ValueError:
                 print("Invalid IP address: {}".format(t))
                 print("Aborted")
