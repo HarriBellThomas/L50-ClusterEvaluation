@@ -8,6 +8,7 @@ import socket
 from IPy import IP
 import uuid
 import paramiko
+import glob
 
 #
 if __name__ == "__main__":
@@ -46,9 +47,13 @@ if __name__ == "__main__":
             experiments_dir, _id, args.origindir, my_ip
         ))
     else:
-        os.system("scp -rp {}/results/data/{}-* L50@{}:{}/{}".format(
-            experiments_dir, _id, args.origin, args.origindir, my_ip
-        ))
+        to_copy = glob.glob("{}/results/data/{}-*".format(experiments_dir))
+        for dir in to_copy:
+            print(dir)
+            print(os.path.basename(dir))
+            os.system("scp -rp {} L50@{}:{}/{}/{}".format(
+                dir, args.origin, args.origindir, my_ip, os.path.basename(dir)
+            ))
     
     # Invoke next in chain.
     remaining = args.remaining.split(",")
@@ -58,7 +63,7 @@ if __name__ == "__main__":
 
         cmd = "tmux kill-session -t dist-evaluation-{} > /dev/null 2>&1; ".format(_id)
         cmd = cmd + "tmux new-session -d -s dist-evaluation-{}; ".format(_id)
-        cmd = cmd + "tmux send -t dist-evaluation-{} \"python3 ~/x/distribute/distribute_client.py {}; exit\" ENTER; ".format(
+        cmd = cmd + "tmux send -t dist-evaluation-{} \"python3 ~/x/distribute/distribute_client.py {}\" ENTER; ".format(
             _id, " ".join([
                 "-e {}".format(args.experiment), # Experiments to run.
                 "-t {}".format(args.target), # Target IPs.
