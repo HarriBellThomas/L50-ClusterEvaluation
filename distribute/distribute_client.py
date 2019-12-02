@@ -64,7 +64,7 @@ if __name__ == "__main__":
                 "-t {}".format(args.target), # Target IPs.
                 "-o {}".format(args.origin),
                 "-d {}".format(args.origindir),
-                "-r {}".format(",".join(remaining)),
+                "-r {}".format(",".join(remaining)) if len(remaining) > 0 else "",
                 "-i {}".format(_id)
             ])
         )
