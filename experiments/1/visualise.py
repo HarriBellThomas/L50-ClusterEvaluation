@@ -14,7 +14,7 @@ mpl.rcParams['figure.dpi'] = 600
 mpl.rc('text', usetex = True) 
 mpl.rcParams['font.size'] = 12 
 # mpl.rcParams['text.latex.preamble'] = r"\usepackage{libertine},\usepackage[libertine]{newtxmath},\usepackage[T1]{fontenc}"
-mpl.rcParams['figure.figsize'] = 5, 4
+mpl.rcParams['figure.figsize'] = 3,2
 
 
 def draw(xs, ys, out):
