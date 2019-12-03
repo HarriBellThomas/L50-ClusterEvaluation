@@ -9,7 +9,6 @@ def run(target, arguments, results_dir):
     buffer_length = arguments.get('buffer_length', 80000)
     time = arguments.get('time', 5)
     udp = arguments.get('udp', False)
-    bidirectional = arguments.get("bidir", False)
     command = "iperf {} 2>&1 | tee {}/{}/{}/local".format(
         " ".join([
             "-u" if udp else "",
@@ -18,7 +17,6 @@ def run(target, arguments, results_dir):
             "-f m",
             "-l {}".format(buffer_length),
             "-c {}".format(str(target)),
-            "--dualtest" if bidirectional else "",
             "-b 10g"
         ]),
         results_dir, arguments.get("_run"), str(target)
