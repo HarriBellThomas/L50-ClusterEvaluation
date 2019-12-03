@@ -52,7 +52,7 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
                     print("Argument set: {}".format(args))
                     run_in_mode(experiment_source, victims, serialised_args, _id, i, results_dir, recipient, simultaneous)
                     print("")
-            elif:
+            else:
                 for t in range(len(targets)):
                     target = targets[t]
                     prepare_for_target(_id, i, target, definition, argument_sets[i])
