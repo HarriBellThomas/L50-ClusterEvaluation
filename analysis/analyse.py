@@ -9,18 +9,24 @@ from IPy import IP
 import uuid
 import glob
 import yaml
-from helpers.parse import parse_ping_local
+from helpers.parse import parse_ping_local, parse_iperf_local
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import networkx as nx
 import string
 from sklearn.preprocessing import normalize
+from scipy.interpolate import make_interp_spline, BSpline
 
-matplotlib.rcParams['figure.dpi'] = 600 
+
+# plt.rcParams['figure.dpi'] = 600 
 plt.rcParams['text.usetex'] = True
 plt.rcParams['text.latex.preamble'] = r'\usepackage{libertine}\usepackage[libertine]{newtxmath}\usepackage{sfmath}\usepackage[T1]{fontenc}'
+# plt.rcParams['figure.figsize'] = 8, 4
 
+colourmap = {
+    "vm0": "green", "vm1":"red", "vm2":"orange", "vm3":"darkblue", "vm4":"purple"
+}
 
 #
 def visualise_experiments(definitions, data_path):
@@ -45,9 +51,7 @@ def visualise_experiments(definitions, data_path):
 
 #
 def plot_ping_topology(experiment_data, dist_uri, name_mapping, color='darkblue'):
-    colourmap = {
-        "vm0": "green", "vm1":"red", "vm2":"orange", "vm3":"darkblue", "vm4":"purple"
-    }
+
 
     experiment = "experiment-2"
     path = pathlib.Path("{}/vis/{}".format(dist_uri, experiment))
@@ -192,8 +196,87 @@ def plot_ping_topology(experiment_data, dist_uri, name_mapping, color='darkblue'
 
 
 #
-def plot_iperf_results(experiment_data, dist_uri, cluster2_mapping):
-    pass
+def plot_iperf_results(experiment_data, dist_uri, name_mapping):
+    experiment = "experiment-1"
+    path = pathlib.Path("{}/vis/{}".format(dist_uri, experiment))
+    path.mkdir(parents=True, exist_ok=True)
+    output = path.absolute().as_posix()
+
+    experiments = range(0, len(experiment_data[1]["parameters"]))
+    hosts = [x.split("/")[-1] for x in glob.glob("{}/*".format(dist_uri))]
+    data = {}
+    for host in hosts:
+        if host == 'vis':
+            continue
+        data[name_mapping[host]] = {}
+        experiment_folder_name = glob.glob("{}/{}/*-{}".format(dist_uri, host, experiment))
+        if len(experiment_folder_name) > 0:
+            experiment_folder_name = experiment_folder_name[0]
+            for i in experiments:
+                data[name_mapping[host]][i] = {}
+                to_hosts = glob.glob("{}/{}/*".format(experiment_folder_name, i))
+                to_hosts.sort()
+                for t in to_hosts:
+                    if os.path.isdir(t):
+                        target = t.split("/")[-1]
+                        data[name_mapping[host]][i][name_mapping[target]] = parse_iperf_local("{}/local".format(t), 4)
+   
+    # all hosts on one graph
+    for exp in experiments:
+        fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(8, 4), sharex=False, sharey=True)
+        axes.margins(x=0)
+        axes.set_ylim(600, 1100)
+        axes.set_xlim(0, 25)
+        axes.set_ylabel("$Bandwidth\ (Mbps)$", fontsize=14)
+        axes.set_xlabel("$Time\ (seconds)$", fontsize=14)
+
+        for host in data.keys():
+            per_host_data = []
+            for target in data:
+                if target != host:
+                    per_host_data.append(data[host][exp][target])
+            
+            
+            # Calc timestep average
+            averaged_mean = []
+            averaged_std = []
+            length = np.array([len(x) for x in per_host_data]).min()
+            for i in range(0, length): # each timestep
+                zipped_datapoints = [per_host_data[j][i] for j in range(0, len(per_host_data))]
+                averaged_mean.append(np.mean(zipped_datapoints))
+                averaged_std.append(np.std(zipped_datapoints))
+        
+
+            ys = np.array(averaged_mean)
+            err = np.array(averaged_std)
+
+            x_vals = np.array([1*i for i in range(0, len(averaged_mean))])
+            xnew = np.linspace(x_vals.min(), x_vals.max(), 300) 
+
+            spl = make_interp_spline(x_vals, ys, k=2)  # type: BSpline
+            spl_err = make_interp_spline(x_vals, err, k=2)  # type: BSpline
+            ys_smooth = spl(xnew)
+            err_smooth = spl_err(xnew)
+
+            axes.plot(xnew, ys_smooth, 'k-', color=colourmap[host], alpha=0.6)
+            axes.fill_between(xnew, ys_smooth-err_smooth, ys_smooth+err_smooth, color=colourmap[host], alpha=0.3)
+        
+        plt.savefig("{}/out3-{}.png".format(output, exp), dpi=600)
+
+
+    # tcp vs udp for all hosts
+    for host in data:
+        print(host)
+        for exp in data[host]:
+            print(exp)
+        #     plt.clf()
+        #     experiment_data = data[host][experiment]
+        #     plt.plot([0.5*i for i in range(0,len(experiment_data))], experiment_data)
+        #     plt.show()
+
+
+
+
 
 
 #
@@ -222,14 +305,14 @@ if __name__ == "__main__":
     if dist_path.exists():
         # visualise_experiments(experiment_data, dist_uri)
         if int(args.cluster) == 1:
-            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'darkblue')
-            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping)
+            # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'darkblue')
+            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
         elif int(args.cluster) == 2:
-            plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, 'darkred')
-            plot_ping_topology(experiment_data, dist_uri, cluster2_mapping)
+            # plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, 'darkred')
+            plot_iperf_results(experiment_data, dist_uri, cluster2_mapping)
         else:
-            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange')
-            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping)
+            # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange')
+            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
 
     else: 
         print("Path doesn't exist.")
