@@ -17,7 +17,7 @@ def visualise_experiments(definitions, data_path):
         paths_to_parse = glob.glob("{}/**/*-experiment-{}".format(data_path, key))
         for path in paths_to_parse:
             path_parts = path.split("/")
-            output_path = pathlib.Path("{}/experiment-{}/{}".format(data_path, key, path_parts[len(path_parts)-2]))
+            output_path = pathlib.Path("{}/vis/experiment-{}/{}".format(data_path, key, path_parts[len(path_parts)-2]))
             output_path.mkdir(parents=True, exist_ok=True)
             # print("call {} on {} outputting to {}".format(
             #     "{}/experiments/{}/visualise.py".format(),
