@@ -18,7 +18,7 @@ def run(target, arguments, results_dir):
             "-f m",
             "-l {}".format(buffer_length),
             "-c {}".format(str(target)),
-            "-d" if bidirectional else "",
+            "--dualtest" if bidirectional else "",
             "-b 10g"
         ]),
         results_dir, arguments.get("_run"), str(target)
