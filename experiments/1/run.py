@@ -9,7 +9,7 @@ def run(target, arguments, results_dir):
     buffer_length = arguments.get('buffer_length', 80000)
     time = arguments.get('time', 5)
     udp = arguments.get('udp', False)
-    command = "iperf {} 2>&1 | tee {}/{}/{}/local".format(
+    command = "sudo iperf {} 2>&1 | tee {}/{}/{}/local".format(
         " ".join([
             "-u" if udp else "",
             "-i 0.5",
