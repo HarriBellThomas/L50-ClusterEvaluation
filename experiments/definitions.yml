@@ -10,7 +10,8 @@ experiments:
       - { buffer_length: 6500, time: 15, udp: true }
     targets:
       strategy: Each
-      recipientMode: true
+      recipient: false
+      simultaneous: false
   - id: 2  # ~1.5 minutes
     src: 2
     name: ping

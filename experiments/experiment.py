@@ -15,7 +15,7 @@ import smtplib
 import ssl
 from email.message import EmailMessage
 import datetime
-
+import random
 
 #
 def run_experiment(targets, definition, _id=str(uuid.uuid4())):
@@ -36,28 +36,68 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
             serialised_args = json.dumps(args)
 
             # Coordinate and execute according to target policy.
-            # targets_config = definition.get("targets")
-            for t in range(len(targets)):
-                target = targets[t]
-                prepare_for_target(_id, i, target, definition, argument_sets[i])
-                print("-- Experiment {}.{}.{} --".format(exp_num, i, t))
-                print("Target: {}".format(target))
-                print("Description: {}".format(definition.get('description', '(none)')))
-                print("Argument set: {}".format(args))
+            targets_config = definition.get("targets", {})
+            strategy = targets_config.get("strategy", 'Each')
+            recipient = targets_config.get("recipient", False)
+            simultaneous = targets_config.get("simultaneous", False)
 
-                run_remote_setup(experiment_source, target, serialised_args, _id)
-                directory = os.path.dirname(os.path.abspath(__file__))
-                os.system("python3 {}/{}/run.py {} '{}' {}".format(
-                    directory, experiment_source, target, serialised_args, results_dir
-                ))
-                time.sleep(2)
-                reset_remote(experiment_source, target, _id, i, results_dir)
-                print("")
+            if strategy == 'Combination':
+                for i in range(2, len(targets)):
+                    victims = ",".join(random.sample(targets, i))
+                    print("Selected {} victims: {}".format(i, victims))
+                    prepare_for_target(_id, i, victims, definition, argument_sets[i])
+                    print("-- Experiment {}.{}.{} --".format(exp_num, i, 0))
+                    print("Targets: {}".format(victims))
+                    print("Description: {}".format(definition.get('description', '(none)')))
+                    print("Argument set: {}".format(args))
+                    run_in_mode(experiment_source, victims, serialised_args, _id, i, results_dir, recipient, simultaneous)
+                    print("")
+            elif:
+                for t in range(len(targets)):
+                    target = targets[t]
+                    prepare_for_target(_id, i, target, definition, argument_sets[i])
+                    print("-- Experiment {}.{}.{} --".format(exp_num, i, t))
+                    print("Target: {}".format(target))
+                    print("Description: {}".format(definition.get('description', '(none)')))
+                    print("Argument set: {}".format(args))
+                    run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir, recipient, simultaneous)
+                    print("")
+
 
         print("---[END EXPERIMENT]---\n")
         print("\nID: {}\n".format(_id))
     else:
         print("Invalid experiment source.")
+
+
+def run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir, recipient=False, simultaneous=False):
+    if simultaneous:
+        # Simultaneous. (Start everyone at the same time)
+        run_remote_setup(experiment_source, target, serialised_args, _id, sleep=False)
+        directory = os.path.dirname(os.path.abspath(__file__))
+        os.system("python3 {}/{}/run.py {} '{}' {}".format(
+            directory, experiment_source, target, serialised_args, results_dir
+        ))
+        time.sleep(2)
+        reset_remote(experiment_source, target, _id, i, results_dir)
+    elif recipient:
+        # Receiver mode. (Set self up first)
+        directory = os.path.dirname(os.path.abspath(__file__))
+        os.system("python3 {}/{}/run.py {} '{}' {}".format(
+            directory, experiment_source, target, serialised_args, results_dir
+        ))
+        run_remote_setup(experiment_source, target, serialised_args, _id, sleep=False)
+        time.sleep(2)
+        reset_remote(experiment_source, target, _id, i, results_dir)
+    else:
+        # Normal mode. (Set remote up first)
+        run_remote_setup(experiment_source, target, serialised_args, _id, sleep=True)
+        directory = os.path.dirname(os.path.abspath(__file__))
+        os.system("python3 {}/{}/run.py {} '{}' {}".format(
+            directory, experiment_source, target, serialised_args, results_dir
+        ))
+        time.sleep(2)
+        reset_remote(experiment_source, target, _id, i, results_dir)
 
 
 #

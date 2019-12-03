@@ -6,7 +6,7 @@ import time
 from scp import SCPClient
 
 #
-def run_remote_setup(source, target, args, id):
+def run_remote_setup(source, target, args, id, sleep=True):
     directory = os.path.dirname(os.path.abspath(__file__))
     if os.path.exists("{}/{}/remote.py".format(directory, source)):
         print("Setting up remote for plan: {}...".format(source))
@@ -28,7 +28,8 @@ def run_remote_setup(source, target, args, id):
         ssh.close()
 
         print("Remote setup complete for plan: {}.\n".format(source))
-        time.sleep(2)
+        if sleep:
+            time.sleep(2)
     else:
         print("No remote setup for plan: {}.".format(source))
 
