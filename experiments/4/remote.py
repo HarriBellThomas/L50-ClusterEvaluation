@@ -50,5 +50,5 @@ path.mkdir(parents=True, exist_ok=True)
 results_dir = path.absolute().as_posix()
 
 start_server(args["_origin"], args, results_dir)
-# time.sleep(2)
-# run_client(args["_origin"], args, results_dir)
+time.sleep(2)
+run_client(args["_origin"], args, results_dir)

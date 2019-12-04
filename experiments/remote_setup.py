@@ -75,8 +75,8 @@ def reset_remote(source, target, id, run, results_dir):
         print("Retrieving remote logs...")
         scp = SCPClient(ssh.get_transport())
         scp.get(
-            "/tmp/{}/{}/".format(id, run), # from remote
-            "{}/{}/{}/".format(results_dir, run, target), # to local
+            "/tmp/{}/{}".format(id, run), # from remote
+            "{}/{}/{}".format(results_dir, run, target), # to local
             recursive=True, # recursive
             preserve_times=True # preserve_times
         )
