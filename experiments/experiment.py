@@ -54,7 +54,8 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
 
                     # Explicitly make combination results dir.
                     pathlib.Path("{}/{}/{}".format(results_dir, run, victims)).mkdir(parents=True, exist_ok=True)
-                    print("{}/{}/{}".format(results_dir, run, victims))
+                    for vic in victimList:
+                        pathlib.Path("{}/{}/{}".format(results_dir, run, vic)).mkdir(parents=True, exist_ok=True)
 
                     print("Selected {} victims: {}".format(t, victims))
                     prepare_for_target(_id, run, victims, definition, argument_sets[i])
