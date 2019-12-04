@@ -12,13 +12,14 @@ def run_client(target, arguments, results_dir):
     udp = arguments.get('udp', False)
     command = "sudo iperf {} 2>&1 | tee {}/{}/{}/local".format(
         " ".join([
-            "-u -b 10g" if udp else "",
+            "-u" if udp else "",
             "-i 0.5",
             "-t {}".format(time),
             "-f m",
             "-l {}".format(buffer_length),
             "-c {}".format(str(target)),
-            "-p 51234"
+            "-p 51234",
+            "-b 10g" if udp else ""
         ]),
         results_dir, arguments.get("_run"), str(target)
     )
