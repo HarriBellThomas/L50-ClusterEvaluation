@@ -4,6 +4,7 @@ import sys
 import os
 # sys.path.insert(1, "{}/..".format(os.path.dirname(os.path.abspath(__file__))))
 import json
+import time
 
 def run_client(target, arguments, results_dir, num=0):
     buffer_length = arguments.get('buffer_length', 8000)
