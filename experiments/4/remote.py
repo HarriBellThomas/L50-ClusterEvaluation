@@ -12,7 +12,7 @@ def run_client(target, arguments, results_dir):
     buffer_length = arguments.get('buffer_length', 8000)
     time = arguments.get('time', 5)
     udp = arguments.get('udp', False)
-    command = "sudo iperf {} 2>&1 | tee {}/remote}".format(
+    command = "sudo iperf {} 2>&1 | tee {}/remote".format(
         " ".join([
             "-u" if udp else "",
             "-i 0.5",
@@ -30,10 +30,6 @@ def run_client(target, arguments, results_dir):
     # Then kill server.
 
 def start_server(target, arguments, results_dir):
-    path = pathlib.Path("/tmp/{}/{}".format(arguments.get("_id"), arguments.get("_run")))
-    path.mkdir(parents=True, exist_ok=True)
-    results_dir = path.absolute().as_posix()
-
     udp = arguments.get("udp", False)
 
     print("Running iperf server...")
@@ -52,5 +48,5 @@ path.mkdir(parents=True, exist_ok=True)
 results_dir = path.absolute().as_posix()
 
 start_server(args["_origin"], args, results_dir)
-time.sleep(2)
-run_client(args["_origin"], args, results_dir)
+# time.sleep(2)
+# run_client(args["_origin"], args, results_dir)
