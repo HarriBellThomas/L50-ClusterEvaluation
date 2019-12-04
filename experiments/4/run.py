@@ -35,6 +35,7 @@ def start_server(target, arguments, results_dir):
         "-u" if udp else "", 
         results_dir, arguments.get("_run"), str(target)
     )
+    os.system(cmd)
 
 if __name__ == "__main__":
     args = json.loads(sys.argv[2])

@@ -34,10 +34,11 @@ def start_server(target, arguments, results_dir):
     udp = arguments.get("udp", False)
 
     print("Running iperf server...")
-    cmd = "sudo iperf {} -s -i 0.5 -f m -p 51234 >> {}/remote-server".format(
+    cmd = "sudo iperf {} -s -i 0.5 -f m -p 51234 -D >> {}/remote-server".format(
         "-u" if udp else "", 
         results_dir
     )
+    os.system(cmd)
 
 
 argsEncodedBytes = base64.b64decode(sys.argv[1].encode("utf-8"))
