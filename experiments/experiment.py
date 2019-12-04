@@ -46,7 +46,7 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
             if strategy == 'Combination':
                 for t in range(1, len(targets)+1):
                     victims = ",".join(random.sample(targets, t))
-                    run = t + i*len(targets)
+                    run = (t-1) + i*len(targets)
                     print("Selected {} victims: {}".format(t, victims))
                     prepare_for_target(_id, run, victims, definition, argument_sets[i])
                     print("-- Experiment {}.{}.{} --".format(exp_num, run, t))
