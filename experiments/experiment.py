@@ -49,6 +49,9 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
                     victims = ",".join(victimList)
                     run = (t-1) + i*len(targets)
 
+                    args["_run"] = run
+                    serialised_args = json.dumps(args)
+
                     # Explicitly make combination results dir.
                     pathlib.Path("{}/{}/{}".format(results_dir, run, victims)).mkdir(parents=True, exist_ok=True)
                     print("{}/{}/{}".format(results_dir, run, victims))
