@@ -4,9 +4,21 @@ import paramiko
 import base64
 import time
 from scp import SCPClient
+import threading
 
 #
 def run_remote_setup(source, target, args, id, sleep=True):
+    targets = target.split(",")
+    if len(targets) > 0:
+        threads = []
+        for t in targets:
+            _t = threading.Thread(target=run_remote_setup, args=[source, t, args, id, sleep])
+            _t.start()
+            threads.append(_t)
+        for _t in threads:
+            _t.join()
+            return
+        
     directory = os.path.dirname(os.path.abspath(__file__))
     if os.path.exists("{}/{}/remote.py".format(directory, source)):
         print("Setting up remote for plan: {}...".format(source))
@@ -35,6 +47,17 @@ def run_remote_setup(source, target, args, id, sleep=True):
 
 #
 def reset_remote(source, target, id, run, results_dir):
+    targets = target.split(",")
+    if len(targets) > 0:
+        threads = []
+        for t in targets:
+            _t = threading.Thread(target=run_remote_setup, args=[source, t, id, run, results_dir])
+            _t.start()
+            threads.append(_t)
+        for _t in threads:
+            _t.join()
+            return
+    
     directory = os.path.dirname(os.path.abspath(__file__))
     if os.path.exists("{}/{}/remote.py".format(directory, source)):
         print("\nResetting evaluation environment for {}...".format(target))

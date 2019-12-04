@@ -12,6 +12,7 @@ experiments:
       strategy: Each
       recipient: false
       simultaneous: false
+
   - id: 2  # ~1.5 minutes
     src: 2
     name: ping
@@ -47,3 +48,26 @@ experiments:
       - { tcp: true, size: 512 }
       - { tcp: true, size: 1024 }
       - { tcp: true, size: 8192 }
+
+  - id: 4
+    src: 4
+    name: asdf
+    description: asdf
+    parameters:
+      - {}
+    targets:
+      strategy: Each
+      recipient: false
+      simultaneous: true
+      
+  - id: 5
+    src: 5
+    name: asdf2
+    description: asdf2
+    parameters:
+      - {}
+    targets:
+      strategy: Each
+      recipient: true
+      simultaneous: false
+      
