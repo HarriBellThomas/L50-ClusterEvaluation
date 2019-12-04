@@ -21,7 +21,6 @@ from crosstalk import crosstalk, stop_crosstalk_both
 #
 def run_experiment(targets, definition, _id=str(uuid.uuid4()), cross=False):
     experiment_source = definition.get("src", definition.get("id", -1))
-    _id = "{}-crosstalk".format(_id) if cross else _id
     if validate_experiment(experiment_source):
         # Init experiment.
         exp_num = definition.get("id", -1)
@@ -272,7 +271,7 @@ if __name__ == "__main__":
             run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, experiment))
             if cross:
                 time.sleep(1)
-                run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, args.experiment), cross=True)
+                run_experiment(targets, exp_definition, "{}-experiment-{}-crosstalk".format(_id, experiment), cross=True)
             time.sleep(1)
     else:
         exp_definition = experiment_data.get(int(args.experiment), {})
@@ -280,7 +279,7 @@ if __name__ == "__main__":
         run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, args.experiment))
         if cross:
             time.sleep(1)
-            run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, args.experiment), cross=True)
+            run_experiment(targets, exp_definition, "{}-experiment-{}-crosstalk".format(_id, args.experiment), cross=True)
 
     
     end = datetime.datetime.now().replace(microsecond=0)
