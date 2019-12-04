@@ -40,6 +40,7 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
             strategy = targets_config.get("strategy", 'Each')
             recipient = targets_config.get("recipient", False)
             simultaneous = targets_config.get("simultaneous", False)
+            print(targets_config)
 
             if strategy == 'Combination':
                 for i in range(2, len(targets)):
