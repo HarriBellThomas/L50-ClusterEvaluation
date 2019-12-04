@@ -33,6 +33,7 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
             args["_id"] = _id
             args["_run"] = i
             args["_desc"] = definition.get('description', '(none)')
+            args["_origin"] = str(socket.gethostbyname(socket.gethostname()))
             serialised_args = json.dumps(args)
 
             # Coordinate and execute according to target policy.
