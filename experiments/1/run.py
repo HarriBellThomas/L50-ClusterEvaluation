@@ -11,7 +11,7 @@ def run(target, arguments, results_dir):
     udp = arguments.get('udp', False)
     command = "sudo iperf {} 2>&1 | tee {}/{}/{}/local".format(
         " ".join([
-            "-u -b 10g" if udp else "",
+            "-b 10g -u" if udp else "",
             "-i 0.5",
             "-t {}".format(time),
             "-f m",
