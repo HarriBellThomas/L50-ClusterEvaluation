@@ -45,8 +45,14 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
 
             if strategy == 'Combination':
                 for t in range(1, len(targets)+1):
-                    victims = ",".join(random.sample(targets, t))
+                    victimList = random.sample(targets, t)
+                    victims = ",".join(victimList)
                     run = (t-1) + i*len(targets)
+
+                    # Explicitly make combination results dir.
+                    pathlib.Path("{}/{}/{}".format(results_dir, run, victims)).mkdir(parents=True, exist_ok=True)
+                    print("{}/{}/{}".format(results_dir, run, victims))
+
                     print("Selected {} victims: {}".format(t, victims))
                     prepare_for_target(_id, run, victims, definition, argument_sets[i])
                     print("-- Experiment {}.{}.{} --".format(exp_num, run, t))
