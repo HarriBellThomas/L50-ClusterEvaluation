@@ -14,13 +14,14 @@ def run_client(target, arguments, results_dir):
     udp = arguments.get('udp', False)
     command = "sudo iperf {} 2>&1 | tee {}/remote".format(
         " ".join([
-            "-u" if udp else "",
+            "-u -b 10g" if udp else "",
             "-i 0.5",
             "-t {}".format(time),
             "-f m",
             "-l {}".format(buffer_length),
             "-c {}".format(str(target)),
-            "-b 10g"
+            "",
+            "-p 51234"
         ]),
         results_dir
     )
@@ -33,7 +34,7 @@ def start_server(target, arguments, results_dir):
     udp = arguments.get("udp", False)
 
     print("Running iperf server...")
-    cmd = "sudo iperf {} -s -i 0.5 -f m -D >> {}/remote-server".format(
+    cmd = "sudo iperf {} -s -i 0.5 -f m -D -p 51234 >> {}/remote-server".format(
         "-u" if udp else "", 
         results_dir
     )

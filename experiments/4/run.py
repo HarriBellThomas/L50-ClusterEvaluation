@@ -17,7 +17,8 @@ def run_client(target, arguments, results_dir):
             "-t {}".format(time),
             "-f m",
             "-l {}".format(buffer_length),
-            "-c {}".format(str(target))
+            "-c {}".format(str(target)),
+            "-p 51234"
         ]),
         results_dir, arguments.get("_run"), str(target)
     )
@@ -30,7 +31,7 @@ def start_server(target, arguments, results_dir):
     udp = arguments.get("udp", False)
 
     print("Running iperf server...")
-    cmd = "sudo iperf {} -s -i 0.5 -f m -D >> {}/{}/{}/local-server".format(
+    cmd = "sudo iperf {} -s -i 0.5 -f m -p 51235 -D >> {}/{}/{}/local-server".format(
         "-u" if udp else "", 
         results_dir, arguments.get("_run"), str(target)
     )
