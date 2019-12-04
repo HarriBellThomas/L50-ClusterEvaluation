@@ -89,9 +89,9 @@ if __name__ == "__main__":
         print("No hosts remaining. Terminate here.")
 
         # Shutdown hosts.
-        for t in args.target.split(","):
-            if t != my_ip:
-                os.system("ssh L50@{} 'sudo shutdown 0'".format(t))
+        # for t in args.target.split(","):
+        #     if t != my_ip:
+        #         os.system("ssh L50@{} 'sudo shutdown 0'".format(t))
 
-        os.system("sudo shutdown 0")
+        # os.system("sudo shutdown 0")
 
