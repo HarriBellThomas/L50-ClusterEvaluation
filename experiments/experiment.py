@@ -41,7 +41,7 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
             strategy = targets_config.get("strategy", 'Each')
             recipient = targets_config.get("recipient", False)
             simultaneous = targets_config.get("simultaneous", False)
-            print(targets_config)
+            timeout = targets_config.get("timeout", 0)
 
             if strategy == 'Combination':
                 for t in range(1, len(targets)+1):
@@ -63,7 +63,7 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
                     print("Targets: {}".format(victims))
                     print("Description: {}".format(definition.get('description', '(none)')))
                     print("Argument set: {}".format(args))
-                    run_in_mode(experiment_source, victims, serialised_args, _id, run, results_dir, recipient, simultaneous)
+                    run_in_mode(experiment_source, victims, serialised_args, _id, run, results_dir, recipient, simultaneous, timeout)
                     print("")
             else:
                 for t in range(len(targets)):
@@ -73,7 +73,7 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
                     print("Target: {}".format(target))
                     print("Description: {}".format(definition.get('description', '(none)')))
                     print("Argument set: {}".format(args))
-                    run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir, recipient, simultaneous)
+                    run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir, recipient, simultaneous, timeout)
                     print("")
 
 
@@ -83,7 +83,7 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
         print("Invalid experiment source.")
 
 
-def run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir, recipient=False, simultaneous=False):
+def run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir, recipient=False, simultaneous=False, timeout=0):
     if simultaneous:
         # Simultaneous. (Start everyone at the same time)
         run_remote_setup(experiment_source, target, serialised_args, _id, sleep=False)
@@ -100,7 +100,7 @@ def run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir,
             directory, experiment_source, target, serialised_args, results_dir
         ))
         run_remote_setup(experiment_source, target, serialised_args, _id, sleep=False)
-        time.sleep(2)
+        time.sleep(timeout + 2)
         reset_remote(experiment_source, target, _id, i, results_dir)
     else:
         # Normal mode. (Set remote up first)

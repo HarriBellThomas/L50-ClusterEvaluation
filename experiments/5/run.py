@@ -10,12 +10,12 @@ def start_server(target, arguments, results_dir):
     udp = arguments.get("udp", False)
 
     print("Running iperf server...")
-    cmd = "timeout 20s sudo iperf {} -s -i 0.5 -f m -p 51236 -D 2>&1 | tee {}/{}/{}/local".format(
+    cmd = "sudo iperf {} -s -i 0.5 -f m -p 51236 -D 2>&1 | tee {}/{}/{}/local".format(
         "-u" if udp else "", 
         results_dir, arguments.get("_run"), str(target)
     )
     os.system(cmd)
-    os.system("sudo kill -9 $(pidof iperf)")
+    os.system("(sleep 22s && sudo kill -9 $(pidof iperf)) &")
 
 
 if __name__ == "__main__":

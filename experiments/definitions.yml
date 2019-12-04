@@ -69,5 +69,6 @@ experiments:
     targets:
       strategy: Combination
       recipient: true
+      timeout: 20 # seconds
       simultaneous: false
       
