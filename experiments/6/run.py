@@ -6,10 +6,10 @@ import os
 import json
 
 def run_client(target, arguments, results_dir, num=0):
-    buffer_length = arguments.get('buffer_length', 80000)
+    buffer_length = arguments.get('buffer_length', 8000)
     time = arguments.get('time', 15)
     udp = arguments.get('udp', False)
-    command = "sudo iperf {} & >> {}/{}/{}/local-{}".format(
+    command = "sudo iperf {} 2>&1 >> {}/{}/{}/local-{} &".format(
         " ".join([
             "-u -b 10g" if udp else "",
             "-i 0.5",

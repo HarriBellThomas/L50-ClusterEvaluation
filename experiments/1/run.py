@@ -6,7 +6,7 @@ import os
 import json
 
 def run(target, arguments, results_dir):
-    buffer_length = arguments.get('buffer_length', 80000)
+    buffer_length = arguments.get('buffer_length', 8000)
     time = arguments.get('time', 5)
     udp = arguments.get('udp', False)
     command = "sudo iperf {} 2>&1 | tee {}/{}/{}/local".format(
