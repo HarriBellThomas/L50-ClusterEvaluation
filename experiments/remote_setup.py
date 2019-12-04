@@ -9,6 +9,7 @@ import threading
 #
 def run_remote_setup(source, target, args, id, sleep=True):
     targets = target.split(",")
+    print(targets)
     if len(targets) > 0:
         threads = []
         for t in targets:
