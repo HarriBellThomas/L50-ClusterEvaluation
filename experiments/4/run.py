@@ -7,18 +7,17 @@ import json
 import time
 
 def run_client(target, arguments, results_dir):
-    buffer_length = arguments.get('buffer_length', 80000)
+    buffer_length = arguments.get('buffer_length', 8000)
     time = arguments.get('time', 5)
     udp = arguments.get('udp', False)
     command = "sudo iperf {} 2>&1 | tee {}/{}/{}/local".format(
         " ".join([
-            "-u" if udp else "",
+            "-u -b 10g" if udp else "",
             "-i 0.5",
             "-t {}".format(time),
             "-f m",
             "-l {}".format(buffer_length),
-            "-c {}".format(str(target)),
-            "-b 10g"
+            "-c {}".format(str(target))
         ]),
         results_dir, arguments.get("_run"), str(target)
     )
