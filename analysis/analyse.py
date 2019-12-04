@@ -222,46 +222,46 @@ def plot_iperf_results(experiment_data, dist_uri, name_mapping):
                         data[name_mapping[host]][i][name_mapping[target]] = parse_iperf_local("{}/local".format(t), 4)
    
     # all hosts on one graph
-    # for exp in experiments:
-    #     fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(8, 4), sharex=False, sharey=True)
-    #     axes.margins(x=0)
-    #     axes.set_ylim(600, 1100)
-    #     axes.set_xlim(0, 25)
-    #     axes.set_ylabel("$Bandwidth\ (Mbps)$", fontsize=14)
-    #     axes.set_xlabel("$Time\ (seconds)$", fontsize=14)
+    for exp in experiments:
+        fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(8, 4), sharex=False, sharey=True)
+        axes.margins(x=0)
+        axes.set_ylim(600, 1100)
+        axes.set_xlim(0, 25)
+        axes.set_ylabel("$Bandwidth\ (Mbps)$", fontsize=14)
+        axes.set_xlabel("$Time\ (seconds)$", fontsize=14)
 
-    #     for host in data.keys():
-    #         per_host_data = []
-    #         for target in data:
-    #             if target != host:
-    #                 per_host_data.append(data[host][exp][target])
+        for host in data.keys():
+            per_host_data = []
+            for target in data:
+                if target != host:
+                    per_host_data.append(data[host][exp][target])
             
             
-    #         # Calc timestep average
-    #         averaged_mean = []
-    #         averaged_std = []
-    #         length = np.array([len(x) for x in per_host_data]).min()
-    #         for i in range(0, length): # each timestep
-    #             zipped_datapoints = [per_host_data[j][i] for j in range(0, len(per_host_data))]
-    #             averaged_mean.append(np.mean(zipped_datapoints))
-    #             averaged_std.append(np.std(zipped_datapoints))
+            # Calc timestep average
+            averaged_mean = []
+            averaged_std = []
+            length = np.array([len(x) for x in per_host_data]).min()
+            for i in range(0, length): # each timestep
+                zipped_datapoints = [per_host_data[j][i] for j in range(0, len(per_host_data))]
+                averaged_mean.append(np.mean(zipped_datapoints))
+                averaged_std.append(np.std(zipped_datapoints))
         
 
-    #         ys = np.array(averaged_mean)
-    #         err = np.array(averaged_std)
+            ys = np.array(averaged_mean)
+            err = np.array(averaged_std)
 
-    #         x_vals = np.array([1*i for i in range(0, len(averaged_mean))])
-    #         xnew = np.linspace(x_vals.min(), x_vals.max(), 300) 
+            x_vals = np.array([1*i for i in range(0, len(averaged_mean))])
+            xnew = np.linspace(x_vals.min(), x_vals.max(), 300) 
 
-    #         spl = make_interp_spline(x_vals, ys, k=2)  # type: BSpline
-    #         spl_err = make_interp_spline(x_vals, err, k=2)  # type: BSpline
-    #         ys_smooth = spl(xnew)
-    #         err_smooth = spl_err(xnew)
+            spl = make_interp_spline(x_vals, ys, k=2)  # type: BSpline
+            spl_err = make_interp_spline(x_vals, err, k=2)  # type: BSpline
+            ys_smooth = spl(xnew)
+            err_smooth = spl_err(xnew)
 
-    #         axes.plot(xnew, ys_smooth, 'k-', color=colourmap[host], alpha=0.6)
-    #         axes.fill_between(xnew, ys_smooth-err_smooth, ys_smooth+err_smooth, color=colourmap[host], alpha=0.3)
+            axes.plot(xnew, ys_smooth, 'k-', color=colourmap[host], alpha=0.6)
+            axes.fill_between(xnew, ys_smooth-err_smooth, ys_smooth+err_smooth, color=colourmap[host], alpha=0.3)
         
-    #     plt.savefig("{}/out3-{}.png".format(output, exp), dpi=600)
+        plt.savefig("{}/out3-{}.png".format(output, exp), dpi=600)
 
 
     # tcp vs udp for all hosts
@@ -330,7 +330,8 @@ if __name__ == "__main__":
                 if 'id' in item:
                     experiment_data[item['id']] = item
 
-    dist_uri = pathlib.Path(args.path).absolute().as_posix()
+    dist_path = pathlib.Path(args.path)
+    dist_uri = dist_path.absolute().as_posix()
 
     cluster1_mapping = {"10.0.0.4":"vm0", "10.0.0.6":"vm1", "10.0.0.7":"vm2", "10.0.0.8":"vm3", "10.0.0.5":"vm4"}
     cluster2_mapping = {"10.0.0.6":"vm0", "10.0.0.5":"vm1", "10.0.0.4":"vm2", "10.0.0.8":"vm3", "10.0.0.7":"vm4"}
@@ -338,13 +339,13 @@ if __name__ == "__main__":
     if dist_path.exists():
         # visualise_experiments(experiment_data, dist_uri)
         if int(args.cluster) == 1:
-            # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'darkblue')
+            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'darkblue')
             plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
         elif int(args.cluster) == 2:
-            # plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, 'darkred')
+            plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, 'darkred')
             plot_iperf_results(experiment_data, dist_uri, cluster2_mapping)
         else:
-            # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange')
+            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange')
             plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
 
     else: 
