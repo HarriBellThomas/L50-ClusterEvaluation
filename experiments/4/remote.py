@@ -27,6 +27,7 @@ def run_client(target, arguments, results_dir):
     )
     print(command)
     os.system(command)
+    os.system("sudo kill -9 $(pidof iperf)")
 
     # Then kill server.
 
