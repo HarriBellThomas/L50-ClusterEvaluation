@@ -52,7 +52,7 @@ def reset_remote(source, target, id, run, results_dir):
     if len(targets) > 1:
         threads = []
         for t in targets:
-            _t = threading.Thread(target=run_remote_setup, args=[source, t, id, run, results_dir])
+            _t = threading.Thread(target=reset_remote, args=[source, t, id, run, results_dir])
             _t.start()
             threads.append(_t)
         for _t in threads:
