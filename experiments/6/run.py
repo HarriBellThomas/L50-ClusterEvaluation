@@ -5,11 +5,11 @@ import os
 # sys.path.insert(1, "{}/..".format(os.path.dirname(os.path.abspath(__file__))))
 import json
 
-def run(target, arguments, results_dir):
+def run_client(target, arguments, results_dir, num=0):
     buffer_length = arguments.get('buffer_length', 80000)
-    time = arguments.get('time', 5)
+    time = arguments.get('time', 15)
     udp = arguments.get('udp', False)
-    command = "sudo iperf {} 2>&1 | tee {}/{}/{}/local".format(
+    command = "sudo iperf {} & >> {}/{}/{}/local-{}".format(
         " ".join([
             "-u -b 10g" if udp else "",
             "-i 0.5",
@@ -18,7 +18,7 @@ def run(target, arguments, results_dir):
             "-l {}".format(buffer_length),
             "-c {}".format(str(target))
         ]),
-        results_dir, arguments.get("_run"), str(target)
+        results_dir, arguments.get("_run"), str(target), num
     )
     print(command)
     os.system(command)
@@ -26,4 +26,7 @@ def run(target, arguments, results_dir):
 
 if __name__ == "__main__":
     args = json.loads(sys.argv[2])
-    run(sys.argv[1], args, sys.argv[3])
+    clients = arguments.get('clients', 1)
+    for i in range(0, clients):
+        run_client(sys.argv[1], args, sys.argv[3], i)
+    time.sleep(18)

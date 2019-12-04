@@ -65,6 +65,16 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
                     print("Argument set: {}".format(args))
                     run_in_mode(experiment_source, victims, serialised_args, _id, run, results_dir, recipient, simultaneous, timeout)
                     print("")
+            elif strategy == 'Single':
+                t = 0
+                target = random.sample(targets, 1)[0]
+                prepare_for_target(_id, i, target, definition, argument_sets[i])
+                print("-- Experiment {}.{}.{} --".format(exp_num, i, t))
+                print("Target: {}".format(target))
+                print("Description: {}".format(definition.get('description', '(none)')))
+                print("Argument set: {}".format(args))
+                run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir, recipient, simultaneous, timeout)
+                print("")
             else:
                 for t in range(len(targets)):
                     target = targets[t]

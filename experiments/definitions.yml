@@ -51,10 +51,11 @@ experiments:
 
   - id: 4
     src: 4
-    name: asdf
-    description: asdf
+    name: iperf-bidirectional
+    description: Run a manual bidirectional iperf test between two hosts.
     parameters:
-      - {}
+      - { udp: false }
+      - { udp: true }
     targets:
       strategy: Each
       recipient: false
@@ -62,13 +63,31 @@ experiments:
       
   - id: 5
     src: 5
-    name: asdf2
-    description: asdf2
+    name: iperf-n-to-1
+    description: Run [1,2,3,4] hosts streaming to a single node using iperf.
     parameters:
-      - {}
+      - { udp: false }
+      - { udp: true }
     targets:
       strategy: Combination
       recipient: true
       timeout: 20 # seconds
       simultaneous: false
+
+  - id: 6
+    src: 6
+    name: iperf-1-to-n
+    description: Run [1,2,3,4] iperf instance against a single node.
+    parameters:
+      - { udp: false, clients: 1 }
+      - { udp: false, clients: 2 }
+      - { udp: false, clients: 3 }
+      - { udp: false, clients: 4 }
+      - { udp: true, clients: 1 }
+      - { udp: true, clients: 2 }
+      - { udp: true, clients: 3 }
+      - { udp: true, clients: 4 }
+    targets:
+      strategy: Single
+      recipient: false
       
