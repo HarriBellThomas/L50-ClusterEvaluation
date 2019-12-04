@@ -47,6 +47,7 @@ def run_remote_setup(source, target, args, id, sleep=True):
 
 #
 def reset_remote(source, target, id, run, results_dir):
+    return
     targets = target.split(",")
     if len(targets) > 1:
         threads = []
