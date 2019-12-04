@@ -61,7 +61,7 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4()), cross=False):
 
                     print("Selected {} victims: {}".format(t, victims))
                     prepare_for_target(_id, run, victims, definition, argument_sets[i])
-                    print("-- Experiment {}.{}.{} --".format(exp_num, run, t))
+                    print("-- Experiment {}.{}.{} (Crosstalk: False) --".format(exp_num, run, t))
                     print("Targets: {}".format(victims))
                     print("Description: {}".format(definition.get('description', '(none)')))
                     print("Argument set: {}".format(args))
@@ -77,7 +77,7 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4()), cross=False):
                     crosstalk(crosstalkers[0], crosstalkers[1], "1000m")
 
                 prepare_for_target(_id, i, target, definition, argument_sets[i])
-                print("-- Experiment {}.{}.{} (Crosstalk: {}) --".format(exp_num, i, t, crosstalk))
+                print("-- Experiment {}.{}.{} (Crosstalk: {}) --".format(exp_num, i, t, cross))
                 print("Target: {}".format(target))
                 print("Description: {}".format(definition.get('description', '(none)')))
                 print("Argument set: {}".format(args))
@@ -95,7 +95,7 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4()), cross=False):
                         crosstalk(crosstalkers[0], crosstalkers[1], "1000m")
 
                     prepare_for_target(_id, i, target, definition, argument_sets[i])
-                    print("-- Experiment {}.{}.{} (Crosstalk: {}) --".format(exp_num, i, t, crosstalk))
+                    print("-- Experiment {}.{}.{} (Crosstalk: {}) --".format(exp_num, i, t, cross))
                     print("Target: {}".format(target))
                     print("Description: {}".format(definition.get('description', '(none)')))
                     print("Argument set: {}".format(args))
