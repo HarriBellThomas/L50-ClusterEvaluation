@@ -30,7 +30,7 @@ def start_server(target, arguments, results_dir):
     udp = arguments.get("udp", False)
 
     print("Running iperf server...")
-    cmd = "sudo iperf {} -s -i 0.5 -f m & >> {}/{}/{}/local-server".format(
+    cmd = "sudo iperf {} -s -i 0.5 -f m -D >> {}/{}/{}/local-server".format(
         "-u" if udp else "", 
         results_dir, arguments.get("_run"), str(target)
     )

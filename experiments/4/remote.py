@@ -33,7 +33,7 @@ def start_server(target, arguments, results_dir):
     udp = arguments.get("udp", False)
 
     print("Running iperf server...")
-    cmd = "sudo iperf {} -s -i 0.5 -f m & >> {}/remote-server".format(
+    cmd = "sudo iperf {} -s -i 0.5 -f m -D >> {}/remote-server".format(
         "-u" if udp else "", 
         results_dir
     )
@@ -46,7 +46,6 @@ args = json.loads(argsEncodedJson)
 path = pathlib.Path("/tmp/{}/{}".format(args.get("_id"), args.get("_run")))
 path.mkdir(parents=True, exist_ok=True)
 results_dir = path.absolute().as_posix()
-os.system("echo '{}' > ~/test".format(results_dir))
 
 start_server(args["_origin"], args, results_dir)
 # time.sleep(2)
