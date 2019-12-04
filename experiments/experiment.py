@@ -99,9 +99,9 @@ def run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir,
         os.system("python3 {}/{}/run.py {} '{}' {}".format(
             directory, experiment_source, target, serialised_args, results_dir
         ))
-        print("x")
         run_remote_setup(experiment_source, target, serialised_args, _id, sleep=False)
-        print("y")
+        
+        print("Waiting for recipient to complete...")
         time.sleep(timeout + 2)
         reset_remote(experiment_source, target, _id, i, results_dir)
     else:
