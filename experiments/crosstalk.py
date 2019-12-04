@@ -9,6 +9,7 @@ def crosstalk(host1, host2, bandwidth):
 def stop_crosstalk_both(host1, host2):
     stop_crosstalk(host1)
     stop_crosstalk(host2)
+    print("\n\n")
 
 def stop_crosstalk(host):
     print("Stopping crosstalk on {}...".format(host))

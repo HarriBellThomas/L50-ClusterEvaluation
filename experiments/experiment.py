@@ -269,12 +269,19 @@ if __name__ == "__main__":
         for experiment in experiment_data.keys():
             exp_definition = experiment_data.get(experiment, {})
             cross = exp_definition.get("crosstalk", False)
-            run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, experiment), cross=cross)
+            run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, experiment))
+            if cross:
+                time.sleep(1)
+                run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, args.experiment), cross=True)
             time.sleep(1)
     else:
         exp_definition = experiment_data.get(int(args.experiment), {})
         cross = exp_definition.get("crosstalk", False)
-        run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, args.experiment), cross=cross)
+        run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, args.experiment))
+        if cross:
+            time.sleep(1)
+            run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, args.experiment), cross=True)
+
     
     end = datetime.datetime.now().replace(microsecond=0)
     print("Duration: {}".format((end-start)))
