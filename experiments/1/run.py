@@ -17,7 +17,7 @@ def run(target, arguments, results_dir):
             "-f m",
             "-l {}".format(buffer_length),
             "-c {}".format(str(target)),
-            "-b 10g"
+            "-b 10g" if udp else ""
         ]),
         results_dir, arguments.get("_run"), str(target)
     )
