@@ -67,7 +67,7 @@ experiments:
     parameters:
       - {}
     targets:
-      strategy: Each
+      strategy: Concurrent
       recipient: true
       simultaneous: false
       
