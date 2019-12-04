@@ -27,7 +27,11 @@ experiments:
       - { size: 100, interval: 0.001 }
       - { size: 1000, interval: 0.001 }
       - { size: 100, interval: 0.0001 }
-      - { size: 1000, interval: 0.0001 }
+      - { size: 1000, interval: 0.0001 }      
+      - { size: 100, interval: 0.00001 }
+      - { size: 1000, interval: 0.00001 }      
+      - { size: 100, interval: 0.000001 }
+      - { size: 1000, interval: 0.000001 }
       - { size: 100, flood: true }
       - { size: 1000, flood: true }
       - { duration: 10, interval: 0.01 }
