@@ -27,6 +27,7 @@ plt.rcParams['text.latex.preamble'] = r'\usepackage{libertine}\usepackage[libert
 colourmap = {
     "vm0": "green", "vm1":"red", "vm2":"orange", "vm3":"darkblue", "vm4":"purple"
 }
+dpi = 600
 
 #
 def visualise_experiments(definitions, data_path):
@@ -50,10 +51,8 @@ def visualise_experiments(definitions, data_path):
 
 
 #
-def plot_ping_topology(experiment_data, dist_uri, name_mapping, color='darkblue'):
-
-
-    experiment = "experiment-2"
+def plot_ping_topology(experiment_data, dist_uri, name_mapping, color='darkblue', cross=False):
+    experiment = "experiment-2" if not cross else "experiment-2-crosstalk"
     path = pathlib.Path("{}/vis/{}".format(dist_uri, experiment))
     path.mkdir(parents=True, exist_ok=True)
     output = path.absolute().as_posix()
@@ -100,14 +99,14 @@ def plot_ping_topology(experiment_data, dist_uri, name_mapping, color='darkblue'
             for vp in parts['bodies']:
                 vp.set_facecolor(colourmap[vm_names[k]])
                 vp.set_edgecolor(colourmap[vm_names[k]])
-                vp.set_linewidth(1)
-                vp.set_alpha(0.8) 
+                vp.set_linewidth(0.5)
+                vp.set_alpha(0.5) 
                 k = k + 1     
             for partname in ('cbars','cmins','cmaxes','cmedians'): # cmeans
                 vp = parts[partname]
                 vp.set_edgecolor('black')
                 vp.set_linewidth(1)  
-                vp.set_alpha(0.5)        
+                vp.set_alpha(0.7)        
                         
             
             axes[i, j].set_ylim([0,8])
@@ -141,11 +140,11 @@ def plot_ping_topology(experiment_data, dist_uri, name_mapping, color='darkblue'
     #     ax.set_yticklabels([])
 
     fig.subplots_adjust(hspace=0.3, wspace=0.1, top=0.95, right=0.98, bottom=0.05)
-    plt.savefig("{}/out2.png".format(output), dpi=600)
-
+    plt.savefig("{}/vis-2{}.png".format(output, "-crosstalk" if cross else ""), dpi=dpi)
+    plt.close(fig)
 
     # Now make a relative distance plot
-    param_set = 2
+    param_set = 6
     distances = []
     for host in keys:
         host_distances = []
@@ -162,8 +161,6 @@ def plot_ping_topology(experiment_data, dist_uri, name_mapping, color='darkblue'
         distances.append(host_distances)
 
     plt.clf()
-            
-    
     dt = [('len', float)]
 
     # Do some fixing
@@ -191,13 +188,13 @@ def plot_ping_topology(experiment_data, dist_uri, name_mapping, color='darkblue'
     plt.figure(figsize=(8,8), tight_layout=False) 
     nx.draw(G, pos, with_labels=True, font_color='white', node_size=8000, font_size=40, font_family='Palatino', width=4, edge_color=color, node_color=color, font_weight='bold')
     plt.margins(0.2)
-    plt.savefig("{}/out.png".format(output), dpi=600, pad_inches=3.5)
+    plt.savefig("{}/vis-1{}.png".format(output, "-crosstalk" if cross else ""), dpi=dpi, pad_inches=3.5)
     # G.draw('/tmp/out.dot', format='dot', prog='neato')
 
 
 #
-def plot_iperf_results(experiment_data, dist_uri, name_mapping):
-    experiment = "experiment-1"
+def plot_iperf_results(experiment_data, dist_uri, name_mapping, cross=False):
+    experiment = "experiment-1" if not cross else "experiment-1-crosstalk"
     path = pathlib.Path("{}/vis/{}".format(dist_uri, experiment))
     path.mkdir(parents=True, exist_ok=True)
     output = path.absolute().as_posix()
@@ -261,8 +258,8 @@ def plot_iperf_results(experiment_data, dist_uri, name_mapping):
             axes.plot(xnew, ys_smooth, 'k-', color=colourmap[host], alpha=0.6)
             axes.fill_between(xnew, ys_smooth-err_smooth, ys_smooth+err_smooth, color=colourmap[host], alpha=0.3)
         
-        plt.savefig("{}/out3-{}.png".format(output, exp), dpi=600)
-
+        plt.savefig("{}/vis-3-{}{}.png".format(output, exp, "-crosstalk" if cross else ""), dpi=dpi)
+        plt.close(fig)
 
     # tcp vs udp for all hosts
     exp_pairs = [(0,2), (1,3)]
@@ -308,8 +305,8 @@ def plot_iperf_results(experiment_data, dist_uri, name_mapping):
                 axes.fill_between(xnew, ys_smooth-err_smooth, ys_smooth+err_smooth, alpha=0.3, color=color_pairs[_i])
                 _i = _i + 1
 
-            plt.savefig("{}/out4-{}-{}.png".format(output, host, "large" if exp_pair[0]==0 else "small"), dpi=600)
-
+            plt.savefig("{}/vis-4-{}-{}{}.png".format(output, host, "large" if exp_pair[0]==0 else "small", "-crosstalk" if cross else ""), dpi=dpi)
+            plt.close(fig)
 
 
 
@@ -340,13 +337,19 @@ if __name__ == "__main__":
         # visualise_experiments(experiment_data, dist_uri)
         if int(args.cluster) == 1:
             plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'darkblue')
+            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'darkblue', cross=True)
             plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
+            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
         elif int(args.cluster) == 2:
             plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, 'darkred')
+            plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, 'darkred', cross=True)
             plot_iperf_results(experiment_data, dist_uri, cluster2_mapping)
+            plot_iperf_results(experiment_data, dist_uri, cluster2_mapping, cross=True)
         else:
             plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange')
+            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange', cross=True)
             plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
+            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
 
     else: 
         print("Path doesn't exist.")
