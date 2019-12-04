@@ -26,7 +26,7 @@ def run_client(target, arguments, results_dir, num=0):
 
 if __name__ == "__main__":
     args = json.loads(sys.argv[2])
-    clients = arguments.get('clients', 1)
+    clients = args.get('clients', 1)
     for i in range(0, clients):
         run_client(sys.argv[1], args, sys.argv[3], i)
     time.sleep(18)
