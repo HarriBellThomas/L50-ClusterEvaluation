@@ -16,10 +16,12 @@ import ssl
 from email.message import EmailMessage
 import datetime
 import random
+from crosstalk import crosstalk, stop_crosstalk_both
 
 #
-def run_experiment(targets, definition, _id=str(uuid.uuid4())):
+def run_experiment(targets, definition, _id=str(uuid.uuid4()), crosstalk=False):
     experiment_source = definition.get("src", definition.get("id", -1))
+    _id = "{}-crosstalk".format(_id) if crosstalk else _id
     if validate_experiment(experiment_source):
         # Init experiment.
         exp_num = definition.get("id", -1)
@@ -65,25 +67,42 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4())):
                     print("Argument set: {}".format(args))
                     run_in_mode(experiment_source, victims, serialised_args, _id, run, results_dir, recipient, simultaneous, timeout)
                     print("")
+
             elif strategy == 'Single':
                 t = 0
                 target = random.sample(targets, 1)[0]
+
+                crosstalkers = random.sample([t for t in targets if t != target], 2)
+                if crosstalk:
+                    crosstalk(crosstalkers[0], crosstalkers[1], "1000m")
+
                 prepare_for_target(_id, i, target, definition, argument_sets[i])
-                print("-- Experiment {}.{}.{} --".format(exp_num, i, t))
+                print("-- Experiment {}.{}.{} (Crosstalk: {}) --".format(exp_num, i, t, crosstalk))
                 print("Target: {}".format(target))
                 print("Description: {}".format(definition.get('description', '(none)')))
                 print("Argument set: {}".format(args))
                 run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir, recipient, simultaneous, timeout)
+                
+                if crosstalk:
+                    stop_crosstalk_both(crosstalkers[0], crosstalkers[1])
                 print("")
+
             else:
                 for t in range(len(targets)):
                     target = targets[t]
+                    crosstalkers = random.sample([t for t in targets if t != target], 2)
+                    if crosstalk:
+                        crosstalk(crosstalkers[0], crosstalkers[1], "1000m")
+
                     prepare_for_target(_id, i, target, definition, argument_sets[i])
-                    print("-- Experiment {}.{}.{} --".format(exp_num, i, t))
+                    print("-- Experiment {}.{}.{} (Crosstalk: {}) --".format(exp_num, i, t, crosstalk))
                     print("Target: {}".format(target))
                     print("Description: {}".format(definition.get('description', '(none)')))
                     print("Argument set: {}".format(args))
                     run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir, recipient, simultaneous, timeout)
+                    
+                    if crosstalk:
+                        stop_crosstalk_both(crosstalkers[0], crosstalkers[1])
                     print("")
 
 
@@ -249,11 +268,13 @@ if __name__ == "__main__":
     if int(args.experiment) == 0:
         for experiment in experiment_data.keys():
             exp_definition = experiment_data.get(experiment, {})
-            run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, experiment))
-            time.sleep(2)
+            crosstalk = exp_definition.get("crosstalk", False)
+            run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, experiment), crosstalk=crosstalk)
+            time.sleep(1)
     else:
         exp_definition = experiment_data.get(int(args.experiment), {})
-        run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, args.experiment))
+        crosstalk = exp_definition.get("crosstalk", False)
+        run_experiment(targets, exp_definition, "{}-experiment-{}".format(_id, args.experiment), crosstalk=crosstalk)
     
     end = datetime.datetime.now().replace(microsecond=0)
     print("Duration: {}".format((end-start)))

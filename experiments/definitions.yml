@@ -3,6 +3,7 @@ experiments:
     src: 1
     name: iperf
     description: Run iperf experiments between the two hosts. 
+    crosstalk: true
     parameters:
       - { buffer_length: 65000, time: 15 }
       - { buffer_length: 6500, time: 15 }
@@ -17,6 +18,7 @@ experiments:
     src: 2
     name: ping
     description: Get RTT times between hosts using ping.
+    crosstalk: true
     parameters:
       - { size: 100, interval: 0.1 }
       - { size: 1000, interval: 0.1 }
@@ -53,6 +55,7 @@ experiments:
     src: 4
     name: iperf-bidirectional
     description: Run a manual bidirectional iperf test between two hosts.
+    crosstalk: true
     parameters:
       - { udp: false }
       - { udp: true }

@@ -11,7 +11,8 @@ def stop_crosstalk_both(host1, host2):
     stop_crosstalk(host2)
 
 def stop_crosstalk(host):
-    cmd = "tmux send -t evaluation-crosstalk C-c; sleep 2; tmux kill-session -t evaluation-crosstalk;"
+    print("Stopping crosstalk on {}...".format(host))
+    cmd = "tmux send -t evaluation-crosstalk C-c; tmux send -t evaluation-crosstalk \"sudo kill -9 $(pidof iperf)\" ENTER; tmux kill-session -t evaluation-crosstalk;"
     run_remote_command(host, cmd)
 
 def run_remote_command(host, cmd):
