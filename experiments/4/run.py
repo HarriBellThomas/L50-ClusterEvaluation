@@ -8,7 +8,7 @@ import time
 
 def run_client(target, arguments, results_dir):
     buffer_length = arguments.get('buffer_length', 8000)
-    time = arguments.get('time', 5)
+    time = arguments.get('time', 18)
     udp = arguments.get('udp', False)
     command = "sudo iperf {} 2>&1 | tee {}/{}/{}/local".format(
         " ".join([
@@ -31,7 +31,7 @@ def start_server(target, arguments, results_dir):
     udp = arguments.get("udp", False)
 
     print("Running iperf server...")
-    cmd = "sudo iperf {} -s -i 0.5 -f m -p 51235 -D >> {}/{}/{}/local-server".format(
+    cmd = "timeout 18 sudo iperf {} -s -i 0.5 -f m -p 51235 -D >> {}/{}/{}/local-server".format(
         "-u" if udp else "", 
         results_dir, arguments.get("_run"), str(target)
     )
