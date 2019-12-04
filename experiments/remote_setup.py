@@ -10,7 +10,7 @@ import threading
 def run_remote_setup(source, target, args, id, sleep=True):
     targets = target.split(",")
     print(targets)
-    if len(targets) > 0:
+    if len(targets) > 1:
         threads = []
         for t in targets:
             _t = threading.Thread(target=run_remote_setup, args=[source, t, args, id, sleep])
@@ -49,7 +49,7 @@ def run_remote_setup(source, target, args, id, sleep=True):
 #
 def reset_remote(source, target, id, run, results_dir):
     targets = target.split(",")
-    if len(targets) > 0:
+    if len(targets) > 1:
         threads = []
         for t in targets:
             _t = threading.Thread(target=run_remote_setup, args=[source, t, id, run, results_dir])
