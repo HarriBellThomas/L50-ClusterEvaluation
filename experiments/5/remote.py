@@ -20,12 +20,14 @@ def run_client(target, arguments, results_dir):
             "-f m",
             "-l {}".format(buffer_length),
             "-c {}".format(str(target)),
-            "-p 51236"
+            "-p 51236",
+            "-D"
         ]),
         results_dir, str(socket.gethostbyname(socket.gethostname()))
     )
     print(command)
     os.system(command)
+    time.sleep(16)
     os.system("sudo kill -9 $(pidof iperf)")
 
 
