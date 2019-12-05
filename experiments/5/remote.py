@@ -12,23 +12,22 @@ def run_client(target, arguments, results_dir):
     buffer_length = arguments.get('buffer_length', 65000)
     _time = arguments.get('time', 15)
     udp = arguments.get('udp', False)
-    command = "iperf {} 2>&1 | tee {}/remote-{}".format(
+    command = "iperf3 {} 2>&1 | tee {}/remote-{}".format(
         " ".join([
             "-u" if udp else "",
             "-i 0.5",
             "-t {}".format(_time),
             "-f m",
-            "-l {}".format(buffer_length),
+            # "-l {}".format(buffer_length),
             "-c {}".format(str(target)),
             "-p 51236",
-            "-b 10g" if udp else "",
-            "-D"
+            "-b 10g" if udp else ""
         ]),
         results_dir, str(socket.gethostbyname(socket.gethostname()))
     )
     print(command)
     os.system(command)
-    time.sleep(_time + 1)
+    # time.sleep(_time + 1)
     os.system("kill -9 $(pidof iperf)")
     os.system("exit")
 
