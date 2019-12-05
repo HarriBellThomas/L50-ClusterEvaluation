@@ -9,7 +9,7 @@ from IPy import IP
 import uuid
 import glob
 import yaml
-from helpers.parse import parse_ping_local, parse_iperf_local
+from helpers.parse import parse_ping_local, parse_iperf_local, parse_multi_client_iperf_server
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
@@ -496,7 +496,7 @@ def experiment_5(experiment_data, dist_uri, name_mapping):
                             target = t.split("/")[-1]
                             seq_parts = target.split(",")
                             if len(seq_parts) > 1:
-                                experiment_data[n]["local"] = parse_iperf_local("{}/local".format(t), 6)
+                                experiment_data[n]["local"] = [sum(x) for x in parse_multi_client_iperf_server("{}/local".format(t))]
                             else:
                                 if not "remotes" in experiment_data[n]:
                                     experiment_data[n]["remotes"] = []
