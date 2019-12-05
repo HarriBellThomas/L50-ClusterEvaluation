@@ -21,15 +21,12 @@ def run_client(target, arguments, results_dir):
             "-l {}".format(buffer_length),
             "-c {}".format(str(target)),
             "-p 51236",
-            "-b 10g" if udp else "",
-            "-D"
+            "-b 10g" if udp else ""
         ]),
         results_dir, str(socket.gethostbyname(socket.gethostname()))
     )
     print(command)
     os.system(command)
-    time.sleep(16)
-    os.system("sudo kill -9 $(pidof iperf)")
 
 
 argsEncodedBytes = base64.b64decode(sys.argv[1].encode("utf-8"))
