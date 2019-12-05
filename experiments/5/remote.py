@@ -10,13 +10,13 @@ import pathlib
 
 def run_client(target, arguments, results_dir):
     buffer_length = arguments.get('buffer_length', 65000)
-    time = arguments.get('time', 15)
+    _time = arguments.get('time', 15)
     udp = arguments.get('udp', False)
     command = "sudo iperf {} 2>&1 | tee {}/remote-{}".format(
         " ".join([
             "-u" if udp else "",
             "-i 0.5",
-            "-t {}".format(time),
+            "-t {}".format(_time),
             "-f m",
             "-l {}".format(buffer_length),
             "-c {}".format(str(target)),
