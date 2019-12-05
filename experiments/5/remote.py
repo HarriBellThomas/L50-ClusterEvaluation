@@ -41,7 +41,12 @@ path.mkdir(parents=True, exist_ok=True)
 results_dir = path.absolute().as_posix()
 
 victims = args["victims"]
-index = victims.split(",").index(str(socket.gethostbyname(socket.gethostname())))
+print(victims)
+print(str(socket.gethostbyname(socket.gethostname())))
+index = victims.split(",").index(
+    str(socket.gethostbyname(socket.gethostname()))
+)
+print(index)
 
 time.sleep(3)
 run_client(args["_origin"], args, results_dir, index)
