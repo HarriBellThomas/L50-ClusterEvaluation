@@ -15,7 +15,7 @@ def start_server(target, arguments, results_dir):
         results_dir, arguments.get("_run"), str(target)
     )
     os.system(cmd)
-    os.system("(sleep 22s && sudo kill -9 $(pidof iperf)) &")
+    # os.system("(sleep 22s && sudo kill -9 $(pidof iperf)) &")
 
 
 if __name__ == "__main__":
