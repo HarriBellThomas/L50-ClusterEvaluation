@@ -11,15 +11,14 @@ def start_server(target, arguments, results_dir):
     udp = arguments.get("udp", False)
 
     print("Running iperf server...")
-    cmd = "sudo iperf {} -s -i 0.5 -f m -p 51236 -l 1M -D -t 23 > {}/{}/{}/local ;".format(
+    cmd = "sudo iperf {} -s -i 0.5 -f m -p 51236 -l 1M -D -t 23 > {}/{}/{}/local".format(
         "-U -u" if udp else "", 
         results_dir, arguments.get("_run"), str(target)
     )
-    cmd = cmd + "sleep 23; sudo kill -9 $(pidof iperf); exit;"
 
     _id = str(uuid.uuid4())
-    tmux_cmd = "tmux new-session -d -s evaluation-{};".format(_id)
-    tmux_cmd = tmux_cmd + "tmux send -t evaluation-{} \"{}\" ENTER; ".format(_id, cmd)
+    tmux_cmd = "tmux new-session -d -s recipient-container;".format()
+    tmux_cmd = tmux_cmd + "tmux send -t recipient-container \"{}\" ENTER; ".format(, cmd)
     os.system(cmd)
 
 

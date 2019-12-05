@@ -135,6 +135,7 @@ def run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir,
         time.sleep(timeout + 2)
         print("Killing iperf...")
         os.system("sudo kill -9 $(pidof iperf)")
+        os.system("tmux kill-session -t recipient-container")
         reset_remote(experiment_source, target, _id, i, results_dir)
     else:
         # Normal mode. (Set remote up first)
