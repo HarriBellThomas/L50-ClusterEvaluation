@@ -19,7 +19,7 @@ def start_server(target, arguments, results_dir):
     _id = str(uuid.uuid4())
     tmux_cmd = "tmux new-session -d -s recipient-container;".format()
     tmux_cmd = tmux_cmd + "tmux send -t recipient-container \"{}\" ENTER; ".format(cmd)
-    os.system(cmd)
+    os.system(tmux_cmd)
 
 
 if __name__ == "__main__":
