@@ -40,5 +40,5 @@ path = pathlib.Path("/tmp/{}/{}".format(args.get("_id"), args.get("_run")))
 path.mkdir(parents=True, exist_ok=True)
 results_dir = path.absolute().as_posix()
 
-time.sleep(2)
+time.sleep(3)
 run_client(args["_origin"], args, results_dir)
