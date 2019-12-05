@@ -43,7 +43,6 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4()), cross=False):
             recipient = targets_config.get("recipient", False)
             simultaneous = targets_config.get("simultaneous", False)
             timeout = targets_config.get("timeout", 0)
-            print(timeout)
 
             if strategy == 'Combination':
                 for t in range(1, len(targets)+1):
@@ -113,7 +112,6 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4()), cross=False):
 
 
 def run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir, recipient=False, simultaneous=False, timeout=0):
-    print(timeout)
     if simultaneous:
         # Simultaneous. (Start everyone at the same time)
         run_remote_setup(experiment_source, target, serialised_args, _id, sleep=False)

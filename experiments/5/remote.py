@@ -27,6 +27,7 @@ def run_client(target, arguments, results_dir):
     )
     print(command)
     os.system(command)
+    os.system("exit")
 
 
 argsEncodedBytes = base64.b64decode(sys.argv[1].encode("utf-8"))
