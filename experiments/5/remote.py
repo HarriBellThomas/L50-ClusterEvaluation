@@ -21,12 +21,14 @@ def run_client(target, arguments, results_dir):
             "-l {}".format(buffer_length),
             "-c {}".format(str(target)),
             "-p 51236",
-            "-b 10g" if udp else ""
+            "-b 10g" if udp else "",
+            "-D"
         ]),
         results_dir, str(socket.gethostbyname(socket.gethostname()))
     )
     print(command)
     os.system(command)
+    time.sleep(_time + 1)
     os.system("kill -9 $(pidof iperf)")
     os.system("exit")
 
