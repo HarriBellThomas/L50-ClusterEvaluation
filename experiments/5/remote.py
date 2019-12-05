@@ -40,7 +40,7 @@ path = pathlib.Path("/tmp/{}/{}".format(args.get("_id"), args.get("_run")))
 path.mkdir(parents=True, exist_ok=True)
 results_dir = path.absolute().as_posix()
 
-victims = args["victims"]
+victims = args["_victims"]
 print(victims)
 print(str(socket.gethostbyname(socket.gethostname())))
 index = victims.split(",").index(
