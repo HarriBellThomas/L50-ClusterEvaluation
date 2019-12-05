@@ -133,8 +133,8 @@ def run_in_mode(experiment_source, target, serialised_args, _id, i, results_dir,
         
         print("Waiting for recipient to complete...")
         time.sleep(timeout + 2)
-        print("Killing iperf")
-        os.system("sudo kill -9 $(pidof iperf)")
+        # print("Killing iperf...")
+        # os.system("sudo kill -9 $(pidof iperf)")
         reset_remote(experiment_source, target, _id, i, results_dir)
     else:
         # Normal mode. (Set remote up first)
