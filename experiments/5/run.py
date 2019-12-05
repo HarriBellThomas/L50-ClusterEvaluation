@@ -15,6 +15,7 @@ def start_server(target, arguments, results_dir):
         results_dir, arguments.get("_run"), str(target)
     )
     os.system(cmd)
+    os.system("kill -9 $(pidof iperf3)")
 
 
 if __name__ == "__main__":

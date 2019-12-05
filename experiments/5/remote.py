@@ -28,8 +28,8 @@ def run_client(target, arguments, results_dir):
     print(command)
     os.system(command)
     # time.sleep(_time + 1)
-    os.system("kill -9 $(pidof iperf)")
-    os.system("exit")
+    # os.system("kill -9 $(pidof iperf)")
+    # os.system("exit")
 
 
 argsEncodedBytes = base64.b64decode(sys.argv[1].encode("utf-8"))
