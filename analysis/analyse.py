@@ -343,12 +343,12 @@ def experiment_4(experiment_data, dist_uri, name_mapping, cross=False):
                         )
     
     # Do stuff with data.
-    # One per host. Just line.
-    print("Loaded")
     mapped_hosts = [name_mapping[h] for h in hosts if h != "vis"]
 
     # Average of all per host.
+    combined = {}
     for exp in experiments:
+        combined[exp] = {}
         egress_data = {}
         ingress_data = {}
         for host in mapped_hosts:
@@ -359,15 +359,17 @@ def experiment_4(experiment_data, dist_uri, name_mapping, cross=False):
             for target in mapped_hosts:
                 if target != host:
                     egress_data[host].append(data[host][exp][target][0])
-                    ingress_data[host].append(data[host][exp][target][1])
+                    ingress_data[host].append(data[host][exp][target][1 if exp == 0 else 2])
                     egress_data[target].append(data[host][exp][target][2])
-                    ingress_data[target].append(data[host][exp][target][3])
+                    ingress_data[target].append(data[host][exp][target][3 if exp == 0 else 0])
         
-        print("Starting plotting... ({})".format(exp))
         # Calc timestep average
         for host in mapped_hosts:
             egress = True
-            fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(8, 4), sharex=False, sharey=True)
+            combined[exp][host] = {}
+
+            # Individual
+            fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(6, 4), sharex=False, sharey=True)
             axes.margins(x=0)
             axes.set_ylim(0, 1100)
             axes.set_xlim(0, 22)
@@ -385,7 +387,7 @@ def experiment_4(experiment_data, dist_uri, name_mapping, cross=False):
                     zipped_datapoints = [dataset[j][i] for j in range(0, len(dataset))]
                     averaged_mean.append(np.mean(zipped_datapoints))
                     averaged_std.append(np.std(zipped_datapoints))
-                print("Zipped datasets... ({})".format("egress" if egress else "ingress"))      
+
                 ys = np.array(averaged_mean)
                 err = np.array(averaged_std)
 
@@ -399,12 +401,121 @@ def experiment_4(experiment_data, dist_uri, name_mapping, cross=False):
 
                 axes.plot(xnew, ys_smooth, 'k-', color=("darkblue" if egress else "darkred"), alpha=0.6)
                 axes.fill_between(xnew, ys_smooth-err_smooth, ys_smooth+err_smooth, color=("darkblue" if egress else "darkred"), alpha=0.3)
+                
+                combined[exp][host][0 if egress else 1] = (xnew, ys_smooth, err_smooth)
                 egress = False
             
+            axes.tick_params(axis='y', which='minor', bottom=False)
+            axes.yaxis.set_minor_locator(matplotlib.ticker.AutoMinorLocator())
+            axes.grid(b=True, which='major', linestyle='-', axis='y', alpha=0.3)
+            axes.grid(b=True, which='minor', linestyle='-', axis='y', alpha=0.2)
             plt.savefig("{}/vis-5-{}-{}{}.png".format(output, host, exp, "-crosstalk" if cross else ""), dpi=dpi)
             print("{}/vis-5-{}-{}{}.png".format(output, host, exp, "-crosstalk" if cross else ""))
             plt.close(fig)
 
+    
+    # Combined graphs.
+    for host in mapped_hosts:
+        fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(6, 4), sharex=False, sharey=True)
+        axes.margins(x=0)
+        axes.set_ylim(0, 1100)
+        axes.set_xlim(0, 22)
+        axes.set_ylabel("$Bandwidth\ (Mbps)$", fontsize=14)
+        axes.set_xlabel("$Time\ (seconds)$", fontsize=14)
+
+        # egress, tcp
+        d = combined[0][host][0]
+        axes.plot(d[0], d[1], 'k-', color="darkblue", alpha=0.6, label="$TCP\ Egress$")
+        axes.fill_between(d[0], d[1]-d[2], d[1]+d[2], color="darkblue", alpha=0.3)
+
+        # ingress, tcp
+        d = combined[0][host][1]
+        axes.plot(d[0], d[1], 'k-', color="darkred", alpha=0.6, label="$TCP\ Ingress$")
+        axes.fill_between(d[0], d[1]-d[2], d[1]+d[2], color="darkred", alpha=0.3)
+
+        # egress, udp
+        d = combined[1][host][0]
+        axes.plot(d[0], d[1], 'k-', color="orange", alpha=0.6, label="$UDP\ Egress$")
+        axes.fill_between(d[0], d[1]-d[2], d[1]+d[2], color="orange", alpha=0.3)
+
+        # ingress, udp
+        d = combined[1][host][1]
+        axes.plot(d[0], d[1], 'k-', color="green", alpha=0.6, label="$UDP\ Ingress$")
+        axes.fill_between(d[0], d[1]-d[2], d[1]+d[2], color="green", alpha=0.3)
+
+        axes.tick_params(axis='y', which='minor', bottom=False)
+        axes.yaxis.set_minor_locator(matplotlib.ticker.AutoMinorLocator())
+        axes.grid(b=True, which='major', linestyle='-', axis='y', alpha=0.3)
+        axes.grid(b=True, which='minor', linestyle='-', axis='y', alpha=0.2)
+        axes.legend(loc='lower center', ncol=2, fancybox=True, shadow=True, edgecolor='black')
+        plt.savefig("{}/vis-5-{}-{}{}.png".format(output, host, 'combined', "-crosstalk" if cross else ""), dpi=dpi)
+        print("{}/vis-5-{}-{}{}.png".format(output, host, 'combined', "-crosstalk" if cross else ""))
+        plt.close(fig)    
+
+
+######################################################################
+def experiment_5(experiment_data, dist_uri, name_mapping):
+    experiment = "experiment-5"
+    path = pathlib.Path("{}/vis/{}".format(dist_uri, experiment))
+    path.mkdir(parents=True, exist_ok=True)
+    output = path.absolute().as_posix()
+
+    # Get data.
+    experiments = range(0, len(experiment_data[5]["parameters"] * 4))
+    hosts = [x.split("/")[-1] for x in glob.glob("{}/*".format(dist_uri))]
+    data = {}
+    for host in hosts:
+        if host == "vis":
+            continue
+        data[host] = {}
+        experiment_folder_name = glob.glob("{}/{}/*-{}".format(dist_uri, host, experiment))
+        if len(experiment_folder_name) > 0:
+            experiment_folder_name = experiment_folder_name[0]
+            for i in experiments:
+                experiment_data = {}
+                to_hosts = glob.glob("{}/{}/10*".format(experiment_folder_name, i))
+                to_hosts.sort()
+                for t in to_hosts:
+                    if os.path.isdir(t):
+                        if len(to_hosts) == 1:
+                            # this is a 1-1 test
+                            target = t.split("/")[-1]
+                            experiment_data[1] = {
+                                "local": parse_iperf_local("{}/local".format(t), 6),
+                                "remotes": [
+                                    parse_iperf_local("{}/remote-{}".format(t, target), 6)
+                                ]
+                            }
+
+                        else:
+                            # this is an n-1 test
+                            n = len(to_hosts) - 1
+                            if n not in experiment_data:
+                                experiment_data[n] = {}
+
+                            target = t.split("/")[-1]
+                            seq_parts = target.split(",")
+                            if len(seq_parts) > 1:
+                                experiment_data[n]["local"] = parse_iperf_local("{}/local".format(t), 6)
+                            else:
+                                if not "remotes" in experiment_data[n]:
+                                    experiment_data[n]["remotes"] = []
+                                experiment_data[n]["remotes"].append(parse_iperf_local("{}/remote-{}".format(t, target), 6))
+                
+
+                data[host][i] = experiment_data
+
+    # Do stuff with data.
+    mapped_hosts = [h for h in hosts if h != "vis"]
+
+    for host in mapped_hosts:
+        for exp in data[host]:
+            for combination in data[host][exp]:
+                print("{}, experiment {} -> {} to 1".format(host, exp, combination))
+                print(data[host][exp][combination])
+                print("")
+                # print(data[host][exp])
+                # print("")
 
 
 ######################################################################
@@ -437,22 +548,25 @@ if __name__ == "__main__":
             # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'darkblue', cross=True)
             # plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
             # plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
-            experiment_4(experiment_data, dist_uri, cluster1_mapping)
-            experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
+            # experiment_4(experiment_data, dist_uri, cluster1_mapping)
+            # experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
+            experiment_5(experiment_data, dist_uri, cluster1_mapping)
         elif int(args.cluster) == 2:
             # plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, 'darkred')
             # plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, 'darkred', cross=True)
             # plot_iperf_results(experiment_data, dist_uri, cluster2_mapping)
             # plot_iperf_results(experiment_data, dist_uri, cluster2_mapping, cross=True)
-            experiment_4(experiment_data, dist_uri, cluster2_mapping)
-            experiment_4(experiment_data, dist_uri, cluster2_mapping, cross=True)
+            # experiment_4(experiment_data, dist_uri, cluster2_mapping)
+            # experiment_4(experiment_data, dist_uri, cluster2_mapping, cross=True)
+            experiment_5(experiment_data, dist_uri, cluster2_mapping)
         else:
             # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange')
             # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange', cross=True)
             # plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
             # plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
-            experiment_4(experiment_data, dist_uri, cluster1_mapping)
-            experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
+            # experiment_4(experiment_data, dist_uri, cluster1_mapping)
+            # experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
+            experiment_5(experiment_data, dist_uri, cluster1_mapping)
 
     else: 
         print("Path doesn't exist.")
