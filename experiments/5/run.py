@@ -21,5 +21,5 @@ def start_server(target, arguments, results_dir, i):
 if __name__ == "__main__":
     args = json.loads(sys.argv[2])
     for i in range(0, len(sys.argv[1].split(","))):
-        run_client(sys.argv[1], args, sys.argv[3], i)
+        start_server(sys.argv[1], args, sys.argv[3], i)
     time.sleep(20)
