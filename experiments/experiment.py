@@ -51,6 +51,7 @@ def run_experiment(targets, definition, _id=str(uuid.uuid4()), cross=False):
                     run = (t-1) + i*len(targets)
 
                     args["_run"] = run
+                    args["_victims"] = victims
                     serialised_args = json.dumps(args)
 
                     # Explicitly make combination results dir.

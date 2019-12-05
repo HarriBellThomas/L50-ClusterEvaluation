@@ -6,9 +6,9 @@ import json
 import base64
 import socket
 import pathlib
+import socket
 
-
-def run_client(target, arguments, results_dir):
+def run_client(target, arguments, results_dir, i=0):
     buffer_length = arguments.get('buffer_length', 65000)
     _time = arguments.get('time', 15)
     udp = arguments.get('udp', False)
@@ -20,7 +20,7 @@ def run_client(target, arguments, results_dir):
             "-f m",
             # "-l {}".format(buffer_length),
             "-c {}".format(str(target)),
-            "-p 51236",
+            "-p {}".format(51236 + i),
             "-b 10g" if udp else ""
         ]),
         results_dir, str(socket.gethostbyname(socket.gethostname()))
@@ -40,5 +40,8 @@ path = pathlib.Path("/tmp/{}/{}".format(args.get("_id"), args.get("_run")))
 path.mkdir(parents=True, exist_ok=True)
 results_dir = path.absolute().as_posix()
 
+victims = args["victims"]
+index = victims.split(",").index(str(socket.gethostbyname(socket.gethostname())))
+
 time.sleep(3)
-run_client(args["_origin"], args, results_dir)
+run_client(args["_origin"], args, results_dir, index)
