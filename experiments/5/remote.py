@@ -12,7 +12,7 @@ def run_client(target, arguments, results_dir):
     buffer_length = arguments.get('buffer_length', 65000)
     _time = arguments.get('time', 15)
     udp = arguments.get('udp', False)
-    command = "iperf3 {} 2>&1 | tee {}/remote-{}".format(
+    command = "iperf {} 2>&1 | tee {}/remote-{}".format(
         " ".join([
             "-u" if udp else "",
             "-i 0.5",
