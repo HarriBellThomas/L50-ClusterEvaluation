@@ -19,7 +19,7 @@ def run_client(target, arguments, results_dir, i=0):
             "-f m",
             # "-l {}".format(buffer_length),
             "-c {}".format(str(target)),
-            "-p {}".format(51236),
+            "-p {}".format(51236 + i),
             "-b 10g"
         ]),
         results_dir, str(socket.gethostbyname(socket.gethostname()))
