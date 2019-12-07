@@ -83,7 +83,7 @@ experiments:
   - id: 6
     src: 6
     name: iperf-1-to-n
-    description: Run [1,2,3,4] iperf instance against a single node.
+    description: Run [1,2,3,4] iperf instance from a single node.
     parameters:
       - { udp: false, clients: 1 }
       - { udp: false, clients: 2 }
