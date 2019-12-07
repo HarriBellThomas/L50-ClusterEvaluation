@@ -74,7 +74,7 @@ experiments:
     description: Run [1,2,3,4] hosts streaming to a single node using iperf.
     parameters:
       - { udp: false }
-      # - { udp: true }
+      - { udp: true }
     targets:
       strategy: Combination
       recipient: false
@@ -96,14 +96,3 @@ experiments:
     targets:
       strategy: Single
       recipient: false
-
-  - id: 7
-    src: 7
-    name: iperf-n-to-1
-    description: Run [1,2,3,4] hosts streaming to a single node using iperf.
-    parameters:
-      - { pcap: "iperf3-udp.pcapng", rate: "1000M" }
-    targets:
-      strategy: Combination
-      recipient: false
-      simultaneous: false
