@@ -71,10 +71,9 @@ experiments:
   - id: 5
     src: 5
     name: iperf-n-to-1
-    description: Run [1,2,3,4] hosts streaming to a single node using iperf.
+    description: Run [1,2,3,4] hosts streaming TCP to a single node using iperf.
     parameters:
       - { udp: false }
-      - { udp: true }
     targets:
       strategy: Combination
       recipient: false
@@ -96,3 +95,14 @@ experiments:
     targets:
       strategy: Single
       recipient: false
+
+  - id: 7
+    src: 5
+    name: iperf-n-to-1-udp
+    description: Run [1,2,3,4] hosts streaming UDP to a single node using iperf.
+    parameters:
+      - { udp: true }
+    targets:
+      strategy: Combination
+      recipient: false
+      simultaneous: false
