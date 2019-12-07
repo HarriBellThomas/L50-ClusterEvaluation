@@ -2,7 +2,7 @@
 if [ ! $INITIALISED ] ; then
     # Run setup phase as root.
     sudo apt-get update -y
-    sudo apt-get install iperf iperf3 traceroute python3-pip -y
+    sudo apt-get install iperf iperf3 traceroute python3-pip tcpreplay tshark -y
 
     sudo -H pip3 install --upgrade pip
     sudo -H pip3 install IPy paramiko pyyaml scp
