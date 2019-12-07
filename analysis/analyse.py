@@ -19,7 +19,7 @@ import string
 from sklearn.preprocessing import normalize
 from scipy.interpolate import make_interp_spline, BSpline
 
-from experiment_5 import experiment_5
+from experiment_5 import experiment_5, experiment_5_aggregated
 from experiment_2 import plot_ping_topology
 from experiment_1 import plot_iperf_results
 from experiment_4 import experiment_4
@@ -56,34 +56,34 @@ def visualise_experiments(definitions, data_path):
 
 
 def process_directory(path, experiment_data):
-    dist_path = pathlib.Path(args.path)
+    dist_path = pathlib.Path(path)
     dist_uri = dist_path.absolute().as_posix()
 
     if dist_path.exists():
         # visualise_experiments(experiment_data, dist_uri)
         if int(args.cluster) == 1:
-            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '.247, .317, .709', 'darkblue')
-            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '.247, .317, .709', 'darkblue', cross=True)
-            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
-            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
-            experiment_4(experiment_data, dist_uri, cluster1_mapping)
-            experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
+            # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '.247, .317, .709', 'darkblue')
+            # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '.247, .317, .709', 'darkblue', cross=True)
+            # plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
+            # plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
+            # experiment_4(experiment_data, dist_uri, cluster1_mapping)
+            # experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
             experiment_5(experiment_data, dist_uri, cluster1_mapping)
         elif int(args.cluster) == 2:
-            plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '.709, .247, .290', 'darkred')
-            plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '.709, .247, .290', 'darkred', cross=True)
-            plot_iperf_results(experiment_data, dist_uri, cluster2_mapping)
-            plot_iperf_results(experiment_data, dist_uri, cluster2_mapping, cross=True)
-            experiment_4(experiment_data, dist_uri, cluster2_mapping)
-            experiment_4(experiment_data, dist_uri, cluster2_mapping, cross=True)
+            # plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '.709, .247, .290', 'darkred')
+            # plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '.709, .247, .290', 'darkred', cross=True)
+            # plot_iperf_results(experiment_data, dist_uri, cluster2_mapping)
+            # plot_iperf_results(experiment_data, dist_uri, cluster2_mapping, cross=True)
+            # experiment_4(experiment_data, dist_uri, cluster2_mapping)
+            # experiment_4(experiment_data, dist_uri, cluster2_mapping, cross=True)
             experiment_5(experiment_data, dist_uri, cluster2_mapping)
         else:
-            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange')
-            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange', cross=True)
-            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
-            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
-            experiment_4(experiment_data, dist_uri, cluster1_mapping)
-            experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
+            # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange')
+            # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange', cross=True)
+            # plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
+            # plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
+            # experiment_4(experiment_data, dist_uri, cluster1_mapping)
+            # experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
             experiment_5(experiment_data, dist_uri, cluster1_mapping)
 
     else: 
@@ -92,7 +92,7 @@ def process_directory(path, experiment_data):
 ######################################################################
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Analyse experiments.')
-    parser.add_argument('-p','--path', help='Which distribution to analyse.', required=True)
+    parser.add_argument('-p','--path', nargs='+', help='Which distribution to analyse.', required=True)
     parser.add_argument('-c','--cluster', help='Cluster number.', default=1)
     args = parser.parse_args()
 
@@ -106,13 +106,28 @@ if __name__ == "__main__":
                 if 'id' in item:
                     experiment_data[item['id']] = item
 
-    
-    paths = args.path.split(",")
+    paths = args.path
     if len(paths) > 1:
+        print("Generating graphs across multiple runs...")
+        dir = int(time.time())
+        p = pathlib.Path("{}/aggregations/{}".format(dirname(os.path.abspath(__file__)), dir))
+        p.mkdir(parents=True, exist_ok=True)
+        output_path = p.absolute().as_posix()
+        print("Output path: {}".format(output_path))
+
         # Plot combined graphs.
-        pass
+        dist_uris = []
+        for path in paths:
+            dist_path = pathlib.Path(path)
+            if dist_path.exists():
+                dist_uris.append(dist_path.absolute().as_posix())
+            else:
+                print("Rejected: {}".format(path))
+
+        experiment_5_aggregated(output_path, experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping)
+
     else:
         # Plot all graphs for a single run.
-        process_directory(paths[0], experiment_data)
+        process_directory(str(paths[0]), experiment_data)
 
 
