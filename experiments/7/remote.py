@@ -9,7 +9,27 @@ import pathlib
 import socket
 
 def run_client(target, arguments, results_dir, i=0):
-    pass
+    buffer_length = arguments.get('buffer_length', 65000)
+    _time = arguments.get('time', 15)
+    command = "iperf3 {} 2>&1 | tee {}/remote-{}".format(
+        " ".join([
+            "-u",
+            "-i 0.5",
+            "-t {}".format(_time),
+            "-f m",
+            # "-l {}".format(buffer_length),
+            "-c {}".format(str(target)),
+            "-p {}".format(51236),
+            "-b 10g"
+        ]),
+        results_dir, str(socket.gethostbyname(socket.gethostname()))
+    )
+    print(command)
+    os.system(command)
+    # time.sleep(_time + 1)
+    # os.system("kill -9 $(pidof iperf)")
+    # os.system("exit")
+
 
 argsEncodedBytes = base64.b64decode(sys.argv[1].encode("utf-8"))
 argsEncodedJson = str(argsEncodedBytes, "utf-8")
