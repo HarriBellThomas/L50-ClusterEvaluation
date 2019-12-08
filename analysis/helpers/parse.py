@@ -3,13 +3,19 @@ import re
 def parse_iperf_local(path, drop_first_n=0, drop_last_n=0):
     return _extract_floats_with_regex(path, "(\d+(?= Mbits\/sec))", drop_first_n, drop_last_n)
 
+def parse_iperf_local_sum(path, drop_first_n=0, drop_last_n=0):
+    return _extract_floats_with_regex(path, "(\d+(?= Mbits\/sec))", drop_first_n, drop_last_n, _filter="(\[SUM\].+)")
+
+
 def parse_ping_local(path, drop_first_n=0, drop_last_n=0):
     return _extract_floats_with_regex(path, "((?<=time=)\d+.\d+(?= ms))", drop_first_n, drop_last_n)
 
 
-def _extract_floats_with_regex(path, regex, drop_first_n=0, drop_last_n=0):
+def _extract_floats_with_regex(path, regex, drop_first_n=0, drop_last_n=0, _filter=None):
     with open(path, "r") as f:
         data = f.read()
+        if _filter:
+            data = "\n".join(re.findall(_filter, data))
         output = re.findall(regex, data)
         return [float(x) for x in output[drop_first_n:(len(output)-drop_last_n)]]
 
