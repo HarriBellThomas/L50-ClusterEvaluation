@@ -63,31 +63,31 @@ def process_directory(path, experiment_data):
     if dist_path.exists():
         # visualise_experiments(experiment_data, dist_uri)
         if int(args.cluster) == 1:
-            # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '.247, .317, .709', 'darkblue')
-            # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '.247, .317, .709', 'darkblue', cross=True)
-            # plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
-            # plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
-            # experiment_4(experiment_data, dist_uri, cluster1_mapping)
-            # experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
-            # experiment_5(experiment_data, dist_uri, cluster1_mapping)
+            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '.247, .317, .709', 'darkblue')
+            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '.247, .317, .709', 'darkblue', cross=True)
+            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
+            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
+            experiment_4(experiment_data, dist_uri, cluster1_mapping)
+            experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
+            experiment_5(experiment_data, dist_uri, cluster1_mapping)
             experiment_6(experiment_data, dist_uri, cluster1_mapping)
         elif int(args.cluster) == 2:
-            # plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '.709, .247, .290', 'darkred')
-            # plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '.709, .247, .290', 'darkred', cross=True)
-            # plot_iperf_results(experiment_data, dist_uri, cluster2_mapping)
-            # plot_iperf_results(experiment_data, dist_uri, cluster2_mapping, cross=True)
-            # experiment_4(experiment_data, dist_uri, cluster2_mapping)
-            # experiment_4(experiment_data, dist_uri, cluster2_mapping, cross=True)
-            # experiment_5(experiment_data, dist_uri, cluster2_mapping)
+            plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '.709, .247, .290', 'darkred')
+            plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '.709, .247, .290', 'darkred', cross=True)
+            plot_iperf_results(experiment_data, dist_uri, cluster2_mapping)
+            plot_iperf_results(experiment_data, dist_uri, cluster2_mapping, cross=True)
+            experiment_4(experiment_data, dist_uri, cluster2_mapping)
+            experiment_4(experiment_data, dist_uri, cluster2_mapping, cross=True)
+            experiment_5(experiment_data, dist_uri, cluster2_mapping)
             experiment_6(experiment_data, dist_uri, cluster2_mapping)
         else:
-            # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange')
-            # plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange', cross=True)
-            # plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
-            # plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
-            # experiment_4(experiment_data, dist_uri, cluster1_mapping)
-            # experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
-            # experiment_5(experiment_data, dist_uri, cluster1_mapping)
+            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange')
+            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange', cross=True)
+            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
+            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
+            experiment_4(experiment_data, dist_uri, cluster1_mapping)
+            experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
+            experiment_5(experiment_data, dist_uri, cluster1_mapping)
             experiment_6(experiment_data, dist_uri, cluster1_mapping)
 
     else: 
@@ -128,7 +128,7 @@ if __name__ == "__main__":
             else:
                 print("Rejected: {}".format(path))
 
-        # experiment_5_aggregated(output_path, experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping)
+        experiment_5_aggregated(output_path, experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping)
         experiment_6_aggregated(output_path, experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping)
 
     else:

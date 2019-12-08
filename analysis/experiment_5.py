@@ -192,8 +192,8 @@ def experiment_5_aggregated(output, experiment_data, dist_uris, name_mapping):
             axes.plot(xs, ys, 'k-', color="blue", alpha=0.6)
             axes.fill_between(xs, ys-(errs), ys+(errs), alpha=0.15, color='blue')
 
-            plt.savefig("{}/aggr-vis-6-{}-{}.png".format(output, name_mapping[host], combination), dpi=dpi)
-            print("{}/aggr-vis-6-{}-{}.png".format(output, name_mapping[host], combination))
+            plt.savefig("{}/aggr-vis-8-{}-{}.png".format(output, name_mapping[host], combination), dpi=dpi)
+            print("{}/aggr-vis-8-{}-{}.png".format(output, name_mapping[host], combination))
             plt.close(fig)
 
 
