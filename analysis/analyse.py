@@ -20,7 +20,7 @@ from sklearn.preprocessing import normalize
 from scipy.interpolate import make_interp_spline, BSpline
 
 from experiment_1 import plot_iperf_results
-from experiment_2 import plot_ping_topology
+from experiment_2 import plot_ping_topology, aggregate_ping_topology_data
 from experiment_4 import experiment_4
 from experiment_5 import experiment_5, experiment_5_aggregated
 from experiment_6 import experiment_6, experiment_6_aggregated
@@ -34,7 +34,10 @@ colourmap = {"vm0": "green", "vm1":"red", "vm2":"orange", "vm3":"darkblue", "vm4
 dpi = 600
 cluster1_mapping = {"10.0.0.4":"vm0", "10.0.0.6":"vm1", "10.0.0.7":"vm2", "10.0.0.8":"vm3", "10.0.0.5":"vm4"}
 cluster2_mapping = {"10.0.0.6":"vm0", "10.0.0.5":"vm1", "10.0.0.4":"vm2", "10.0.0.8":"vm3", "10.0.0.7":"vm4"}
-
+cluster1_node_color = '.133, .545, .133'
+cluster1_edge_color = '.133, .545, .133'
+cluster2_node_color = '.133, .545, .133'
+cluster3_edge_color = '.133, .545, .133'
 
 #
 def visualise_experiments(definitions, data_path):
@@ -63,8 +66,8 @@ def process_directory(path, experiment_data):
     if dist_path.exists():
         # visualise_experiments(experiment_data, dist_uri)
         if int(args.cluster) == 1:
-            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '.247, .317, .709', 'darkblue')
-            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '.247, .317, .709', 'darkblue', cross=True)
+            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '#0080ff', 'darkblue')
+            plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '#0080ff', 'darkblue', cross=True)
             plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
             plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
             experiment_4(experiment_data, dist_uri, cluster1_mapping)
@@ -72,8 +75,8 @@ def process_directory(path, experiment_data):
             experiment_5(experiment_data, dist_uri, cluster1_mapping)
             experiment_6(experiment_data, dist_uri, cluster1_mapping)
         elif int(args.cluster) == 2:
-            plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '.709, .247, .290', 'darkred')
-            plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '.709, .247, .290', 'darkred', cross=True)
+            plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '#FC3236', 'darkred')
+            plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '#FC3236', 'darkred', cross=True)
             plot_iperf_results(experiment_data, dist_uri, cluster2_mapping)
             plot_iperf_results(experiment_data, dist_uri, cluster2_mapping, cross=True)
             experiment_4(experiment_data, dist_uri, cluster2_mapping)
@@ -113,10 +116,11 @@ if __name__ == "__main__":
     paths = args.path
     if len(paths) > 1:
         print("Generating graphs across multiple runs...")
-        dir = int(time.time())
-        p = pathlib.Path("{}/aggregations/{}".format(dirname(os.path.abspath(__file__)), dir))
+        p = pathlib.Path("{}/aggregations/cluster{}".format(dirname(os.path.abspath(__file__)), args.cluster))
         p.mkdir(parents=True, exist_ok=True)
         output_path = p.absolute().as_posix()
+        for dir in ["experiment2", "experiment2-crosstalk", "experiment5", "experiment6"]:
+            pathlib.Path("{}/{}".format(output_path, dir)).mkdir(parents=True, exist_ok=True)
         print("Output path: {}".format(output_path))
 
         # Plot combined graphs.
@@ -128,8 +132,15 @@ if __name__ == "__main__":
             else:
                 print("Rejected: {}".format(path))
 
-        experiment_5_aggregated(output_path, experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping)
-        experiment_6_aggregated(output_path, experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping)
+        if args.cluster == 1:
+            aggregate_ping_topology_data(output_path + "/experiment2", experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping, '#0080ff', 'darkblue', cross=False)
+            aggregate_ping_topology_data(output_path + "/experiment2-crosstalk", experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping, '#0080ff', 'darkblue', cross=True)
+        else:
+            aggregate_ping_topology_data(output_path + "/experiment2", experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping, '#FC3236', 'darkred', cross=False)
+            aggregate_ping_topology_data(output_path + "/experiment2-crosstalk", experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping, '#FC3236', 'darkred', cross=True)
+
+        experiment_5_aggregated(output_path + "/experiment5", experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping)
+        experiment_6_aggregated(output_path + "/experiment6", experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping)
 
     else:
         # Plot all graphs for a single run.

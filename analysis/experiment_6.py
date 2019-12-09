@@ -43,11 +43,7 @@ def experiment_6(experiment_data, dist_uri, name_mapping):
     for host in mapped_hosts:
         for exp in data[host]:
             for combination in data[host][exp]:
-                # print("{}, experiment {} -> {} to 1".format(host, exp, combination))
                 to_plot = data[host][exp][combination]
-                # print(to_plot)
-                # print(to_plot["locals"])
-                # print(to_plot["remotes"])
 
                 length = min([len(x) for x in to_plot["locals"]])
                 xs = [0.5*i for i in range(0, length)]
@@ -55,12 +51,11 @@ def experiment_6(experiment_data, dist_uri, name_mapping):
                 fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(6, 4), sharex=False, sharey=True)
                 axes.margins(x=0)
                 axes.set_ylim(0, 1100)
-                # axes.set_xlim(0, 22)
                 axes.set_ylabel("$Bandwidth\ (Mbps)$", fontsize=14)
                 axes.set_xlabel("$Time\ (seconds)$", fontsize=14)
 
                 for local in to_plot["locals"]:
-                    axes.plot(xs, local, 'k-', color="green", alpha=0.6)
+                    axes.plot(xs, local[0:length], 'k-', color="green", alpha=0.6)
 
                 
                 min_length = 10000
@@ -102,9 +97,7 @@ def experiment_6_aggregated(output, experiment_data, dist_uris, name_mapping):
         for data_collection in data[host]:
             for experiment in data_collection:
                 for num_hosts in data_collection[experiment]:
-                    # Should just be one...
                     _host_exp_data = data_collection[experiment][num_hosts]
-                    # print("{} {}".format(host, num_hosts))
                     num_host_data[host][experiment].append(_host_exp_data)
 
 
@@ -113,10 +106,6 @@ def experiment_6_aggregated(output, experiment_data, dist_uris, name_mapping):
         results[host] = {}
         for experiment in num_host_data[host]:
             _d = num_host_data[host][experiment]
-            # print(_d)
-            
-            # remotes_length = 10000
-            # locals_length = 10000
             _lengths = {
                 "remotes": 10000,
                 "locals": 10000,
@@ -124,9 +113,6 @@ def experiment_6_aggregated(output, experiment_data, dist_uris, name_mapping):
             for dist in _d:
                 _lengths["remotes"] = min(_lengths["remotes"], *[len(i) for i in dist["remotes"]])
                 _lengths["locals"] = min(_lengths["locals"], *[len(i) for i in dist["locals"]])
-            # print(_lengths)
-            # _d is the list of an experiments for a given number of hosts
-            # want out { locals:...  , remotes:... }
 
             _types = ["locals", "remotes"]
             _results = {
@@ -136,36 +122,25 @@ def experiment_6_aggregated(output, experiment_data, dist_uris, name_mapping):
             for _type in _types:
                 _results["data"][_type] = []
                 _results["errors"][_type] = []
-                # print(_type)
                 paired = [_dist[_type] for _dist in _d]
-                # print(paired)
-
-
-                # for j in range(0, min(_lengths["remotes"], _lengths["locals"])):
-                    
-                # return   
+                 
                 num_clients = (experiment % 4) + 1            
                 for i in range(0, num_clients if _type == "locals" else 1): 
                     _results["data"][_type].append([])
                     _results["errors"][_type].append([])
-                    # aligned_sequences = ([x[0][i] for x in paired])
-                    # print(aligned_sequences)
-                    # print(_lengths[_type])
+
                     for j in range(0, _lengths[_type]):
-                        # print("{}, {}".format(i, j))
                         _timestep = ([x[i] for x in paired])
                         timestep = [x[j] for x in _timestep]
                         _results["data"][_type][i].append(np.mean(timestep))
                         _results["errors"][_type][i].append(np.std(timestep))
             
-            # print("")
             results[host][experiment] = _results
             to_plot = _results["data"]
-            # print(to_plot)
-            # return
-            length = max(
-                max([len(x) for x in to_plot["locals"]]),
-                max([len(x) for x in to_plot["remotes"]])
+            
+            length = min(
+                min([len(x) for x in to_plot["locals"]]),
+                min([len(x) for x in to_plot["remotes"]])
             )
             xs = [0.5*i for i in range(0, length)]
 
@@ -176,16 +151,16 @@ def experiment_6_aggregated(output, experiment_data, dist_uris, name_mapping):
             axes.set_xlabel("$Time\ (seconds)$", fontsize=14)
 
             for i in range(0, len(to_plot["locals"])):
-                local = _results["data"]["locals"][i]
-                err = _results["errors"]["locals"][i]
+                local = _results["data"]["locals"][i][0:length]
+                err = _results["errors"]["locals"][i][0:length]
                 _xs, _ys, _errs = generate_spline(xs, local, err)
                 axes.plot(_xs, _ys, 'k-', color="green", alpha=0.6)
                 axes.fill_between(_xs, _ys-_errs, _ys+_errs, alpha=0.15, color='green')
 
             min_length = 10000
             for i in range(0, len(to_plot["remotes"])):
-                remote = _results["data"]["remotes"][i]
-                err = _results["errors"]["remotes"][i]
+                remote = _results["data"]["remotes"][i][0:length]
+                err = _results["errors"]["remotes"][i][0:length]
                 _xs, _ys, _errs = generate_spline([x+0.01 for x in xs][0:len(remote)], remote, err)
                 axes.plot(_xs, _ys, 'k-', color="red", alpha=0.6)
                 min_length = min(min_length, len(remote))
@@ -197,7 +172,7 @@ def experiment_6_aggregated(output, experiment_data, dist_uris, name_mapping):
             plt.close(fig)
 
 
-
+#
 def collect_data(experiment_data, dist_uri, experiment):
     # Get data.
     experiments = range(0, 4)
@@ -231,14 +206,13 @@ def collect_data(experiment_data, dist_uri, experiment):
     return data
 
 
-
+#
 def generate_spline(xs, ys, errs):
     ys = np.array(ys)
     err = np.array(errs)
 
-    x_vals = np.array([1*i for i in range(0, len(xs))])
+    x_vals = np.array(xs)
     xnew = np.linspace(x_vals.min(), x_vals.max(), 300) 
-
     spl = make_interp_spline(x_vals, ys, k=2)  # type: BSpline
     spl_err = make_interp_spline(x_vals, err, k=2)  # type: BSpline
     ys_smooth = spl(xnew)
@@ -246,9 +220,13 @@ def generate_spline(xs, ys, errs):
 
     return xnew, ys_smooth, err_smooth
 
+
+#
 def pairwise_sum(l1, l2):
     length = min(len(l1), len(l2))
     return [sum(x) for x in zip(list1[0:length], list2[0:length])]
 
+
+#
 def mean(a):
     return sum(a) / len(a)
