@@ -130,6 +130,7 @@ dmypy.json
 
 
 analysis/data/*
+analysis/x*
 analysis/aggregations/*
 distribute/results/*
 experiments/results/*

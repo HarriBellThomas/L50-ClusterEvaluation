@@ -72,16 +72,16 @@ def process_directory(path, experiment_data, wide=False):
             plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True, wide=wide)
             experiment_4(experiment_data, dist_uri, cluster1_mapping)
             experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
-            experiment_5(experiment_data, dist_uri, cluster1_mapping)
+            experiment_5(experiment_data, dist_uri, cluster1_mapping, wide=wide)
             experiment_6(experiment_data, dist_uri, cluster1_mapping)
         elif int(args.cluster) == 2:
             plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '#FC3236', 'darkred')
             plot_ping_topology(experiment_data, dist_uri, cluster2_mapping, '#FC3236', 'darkred', cross=True)
-            plot_iperf_results(experiment_data, dist_uri, cluster2_mapping)
-            plot_iperf_results(experiment_data, dist_uri, cluster2_mapping, cross=True)
+            plot_iperf_results(experiment_data, dist_uri, cluster2_mapping, wide=wide)
+            plot_iperf_results(experiment_data, dist_uri, cluster2_mapping, cross=True, wide=wide)
             experiment_4(experiment_data, dist_uri, cluster2_mapping)
             experiment_4(experiment_data, dist_uri, cluster2_mapping, cross=True)
-            experiment_5(experiment_data, dist_uri, cluster2_mapping)
+            experiment_5(experiment_data, dist_uri, cluster2_mapping, wide=wide)
             experiment_6(experiment_data, dist_uri, cluster2_mapping)
         else:
             plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, 'orange')
@@ -90,7 +90,7 @@ def process_directory(path, experiment_data, wide=False):
             plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
             experiment_4(experiment_data, dist_uri, cluster1_mapping)
             experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
-            experiment_5(experiment_data, dist_uri, cluster1_mapping)
+            experiment_5(experiment_data, dist_uri, cluster1_mapping, wide=wide)
             experiment_6(experiment_data, dist_uri, cluster1_mapping)
 
     else: 

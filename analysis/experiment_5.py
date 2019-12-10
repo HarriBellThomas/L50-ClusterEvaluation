@@ -28,7 +28,7 @@ cluster2_mapping = {"10.0.0.6":"vm0", "10.0.0.5":"vm1", "10.0.0.4":"vm2", "10.0.
 
 
 ######################################################################
-def experiment_5(experiment_data, dist_uri, name_mapping):
+def experiment_5(experiment_data, dist_uri, name_mapping, wide=False):
     experiment = "experiment-5"
     path = pathlib.Path("{}/vis/{}".format(dist_uri, experiment))
     path.mkdir(parents=True, exist_ok=True)
@@ -57,7 +57,10 @@ def experiment_5(experiment_data, dist_uri, name_mapping):
 
                 fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(6, 4), sharex=False, sharey=True)
                 axes.margins(x=0)
-                axes.set_ylim(0, 4100)
+                if wide:
+                    axes.set_ylim(0, 5000)
+                else:
+                    axes.set_ylim(0, 4100)
                 # axes.set_xlim(0, 22)
                 axes.set_ylabel("$Bandwidth\ (Mbps)$", fontsize=14)
                 axes.set_xlabel("$Time\ (seconds)$", fontsize=14)

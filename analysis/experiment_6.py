@@ -153,6 +153,8 @@ def experiment_6_aggregated(output, experiment_data, dist_uris, name_mapping):
             for i in range(0, len(to_plot["locals"])):
                 local = _results["data"]["locals"][i][0:length]
                 err = _results["errors"]["locals"][i][0:length]
+                if(len(locals) == 0 or len(err) == 0):
+                    continue
                 _xs, _ys, _errs = generate_spline(xs, local, err)
                 axes.plot(_xs, _ys, 'k-', color="green", alpha=0.6)
                 axes.fill_between(_xs, _ys-_errs, _ys+_errs, alpha=0.15, color='green')
@@ -161,6 +163,8 @@ def experiment_6_aggregated(output, experiment_data, dist_uris, name_mapping):
             for i in range(0, len(to_plot["remotes"])):
                 remote = _results["data"]["remotes"][i][0:length]
                 err = _results["errors"]["remotes"][i][0:length]
+                if(len(remote) == 0 or len(err) == 0):
+                    continue
                 _xs, _ys, _errs = generate_spline([x+0.01 for x in xs][0:len(remote)], remote, err)
                 axes.plot(_xs, _ys, 'k-', color="red", alpha=0.6)
                 min_length = min(min_length, len(remote))
@@ -208,6 +212,9 @@ def collect_data(experiment_data, dist_uri, experiment):
 
 #
 def generate_spline(xs, ys, errs):
+    if (len(xs) == 0 or len(ys) == 0 or len(errs) == 0):
+        return xs, ys, errs
+
     ys = np.array(ys)
     err = np.array(errs)
 
