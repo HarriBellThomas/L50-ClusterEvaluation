@@ -153,7 +153,7 @@ def experiment_6_aggregated(output, experiment_data, dist_uris, name_mapping):
             for i in range(0, len(to_plot["locals"])):
                 local = _results["data"]["locals"][i][0:length]
                 err = _results["errors"]["locals"][i][0:length]
-                if(len(locals) == 0 or len(err) == 0):
+                if(len(local) == 0 or len(err) == 0):
                     continue
                 _xs, _ys, _errs = generate_spline(xs, local, err)
                 axes.plot(_xs, _ys, 'k-', color="green", alpha=0.6)
