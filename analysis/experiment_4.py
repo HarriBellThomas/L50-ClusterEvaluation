@@ -126,6 +126,8 @@ def experiment_4(experiment_data, dist_uri, name_mapping, cross=False):
             axes.yaxis.set_minor_locator(matplotlib.ticker.AutoMinorLocator())
             axes.grid(b=True, which='major', linestyle='-', axis='y', alpha=0.3)
             axes.grid(b=True, which='minor', linestyle='-', axis='y', alpha=0.2)
+            
+            fig.subplots_adjust(top=0.98, right=0.98)
             plt.savefig("{}/vis-5-{}-{}{}.png".format(output, host, exp, "-crosstalk" if cross else ""), dpi=dpi)
             print("{}/vis-5-{}-{}{}.png".format(output, host, exp, "-crosstalk" if cross else ""))
             plt.close(fig)
@@ -133,12 +135,12 @@ def experiment_4(experiment_data, dist_uri, name_mapping, cross=False):
     
     # Combined graphs.
     for host in mapped_hosts:
-        fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(6, 4), sharex=False, sharey=True)
+        fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(4, 3), sharex=False, sharey=True)
         axes.margins(x=0)
         axes.set_ylim(0, 1100)
         axes.set_xlim(0, 22)
-        axes.set_ylabel("$Bandwidth\ (Mbps)$", fontsize=14)
-        axes.set_xlabel("$Time\ (seconds)$", fontsize=14)
+        axes.set_ylabel("$Bandwidth\ (Mbps)$", fontsize=15)
+        axes.set_xlabel("$Time\ (seconds)$", fontsize=15)
 
         # egress, tcp
         d = combined[0][host][0]
@@ -164,6 +166,9 @@ def experiment_4(experiment_data, dist_uri, name_mapping, cross=False):
         axes.yaxis.set_minor_locator(matplotlib.ticker.AutoMinorLocator())
         axes.grid(b=True, which='major', linestyle='-', axis='y', alpha=0.3)
         axes.grid(b=True, which='minor', linestyle='-', axis='y', alpha=0.2)
+
+        # fig.subplots_adjust(top=0.98, right=0.98)
+        plt.tight_layout()
         axes.legend(loc='lower center', ncol=2, fancybox=True, shadow=True, edgecolor='black')
         plt.savefig("{}/vis-5-{}-{}{}.png".format(output, host, 'combined', "-crosstalk" if cross else ""), dpi=dpi)
         print("{}/vis-5-{}-{}{}.png".format(output, host, 'combined', "-crosstalk" if cross else ""))

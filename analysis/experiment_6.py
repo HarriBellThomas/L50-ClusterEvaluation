@@ -144,11 +144,11 @@ def experiment_6_aggregated(output, experiment_data, dist_uris, name_mapping):
             )
             xs = [0.5*i for i in range(0, length)]
 
-            fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(6, 4), sharex=False, sharey=True)
+            fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(3, 3), sharex=False, sharey=True)
             axes.margins(x=0)
             axes.set_ylim(0, 1100)
-            axes.set_ylabel("$Bandwidth\ (Mbps)$", fontsize=14)
-            axes.set_xlabel("$Time\ (seconds)$", fontsize=14)
+            axes.set_ylabel("$Bandwidth\ (Mbps)$", fontsize=16)
+            axes.set_xlabel("$Time\ (seconds)$", fontsize=16)
 
             for i in range(0, len(to_plot["locals"])):
                 local = _results["data"]["locals"][i][0:length]
@@ -166,7 +166,7 @@ def experiment_6_aggregated(output, experiment_data, dist_uris, name_mapping):
                 min_length = min(min_length, len(remote))
                 axes.fill_between(_xs, _ys-_errs, _ys+_errs, alpha=0.15, color='red')
 
-            
+            plt.tight_layout()
             plt.savefig("{}/aggr-vis-9-{}-{}.png".format(output, name_mapping[host], (experiment%4)+1), dpi=dpi)
             print("{}/aggr-vis-9-{}-{}.png".format(output, name_mapping[host], (experiment%4)+1))
             plt.close(fig)

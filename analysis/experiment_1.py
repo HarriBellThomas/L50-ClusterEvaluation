@@ -29,7 +29,7 @@ cluster2_mapping = {"10.0.0.6":"vm0", "10.0.0.5":"vm1", "10.0.0.4":"vm2", "10.0.
 
 
 ############################################################################
-def plot_iperf_results(experiment_data, dist_uri, name_mapping, cross=False):
+def plot_iperf_results(experiment_data, dist_uri, name_mapping, cross=False, wide=False):
     experiment = "experiment-1" if not cross else "experiment-1-crosstalk"
     path = pathlib.Path("{}/vis/{}".format(dist_uri, experiment))
     path.mkdir(parents=True, exist_ok=True)
@@ -56,14 +56,19 @@ def plot_iperf_results(experiment_data, dist_uri, name_mapping, cross=False):
    
     # all hosts on one graph
     for exp in experiments:
-        fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(8, 4), sharex=False, sharey=True)
+        fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(5, 4), sharex=False, sharey=True)
         axes.margins(x=0)
-        axes.set_ylim(600, 1100)
+        if wide:
+            axes.set_ylim(400, 1300)
+        else:
+            axes.set_ylim(600, 1100)
         axes.set_xlim(0, 25)
         axes.set_ylabel("$Bandwidth\ (Mbps)$", fontsize=14)
         axes.set_xlabel("$Time\ (seconds)$", fontsize=14)
 
-        for host in data.keys():
+        hosts = list(data.keys())
+        hosts.sort()
+        for host in hosts:
             per_host_data = []
             for target in data:
                 if target != host:
@@ -91,9 +96,11 @@ def plot_iperf_results(experiment_data, dist_uri, name_mapping, cross=False):
             ys_smooth = spl(xnew)
             err_smooth = spl_err(xnew)
 
-            axes.plot(xnew, ys_smooth, 'k-', color=colourmap[host], alpha=0.6)
-            axes.fill_between(xnew, ys_smooth-err_smooth, ys_smooth+err_smooth, color=colourmap[host], alpha=0.3)
+            axes.plot(xnew, ys_smooth, 'k-', color=colourmap[host], alpha=0.7, label=host)
+            axes.fill_between(xnew, ys_smooth-err_smooth, ys_smooth+err_smooth, color=colourmap[host], alpha=(0.3 if int(exp) < 2 else 0.2))
         
+        axes.legend(loc='lower center', ncol=3, fancybox=True, shadow=True, edgecolor='black')
+        plt.subplots_adjust(top=0.97, right=0.97)
         plt.savefig("{}/vis-3-{}{}.png".format(output, exp, "-crosstalk" if cross else ""), dpi=dpi)
         print("{}/vis-3-{}{}.png".format(output, exp, "-crosstalk" if cross else ""))
         plt.close(fig)
@@ -103,9 +110,12 @@ def plot_iperf_results(experiment_data, dist_uri, name_mapping, cross=False):
     color_pairs = ['darkblue', 'darkred']
     for host in data:
         for exp_pair in exp_pairs:
-            fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(8, 4), sharex=False, sharey=True)
+            fig, axes = plt.subplots(nrows=1, ncols=1, figsize=(5, 4), sharex=False, sharey=True)
             axes.margins(x=0)
-            axes.set_ylim(600, 1100)
+            if wide:
+                axes.set_ylim(400, 1300)
+            else:
+                axes.set_ylim(600, 1100)
             axes.set_xlim(0, 25)
             axes.set_ylabel("$Bandwidth\ (Mbps)$", fontsize=14)
             axes.set_xlabel("$Time\ (seconds)$", fontsize=14)

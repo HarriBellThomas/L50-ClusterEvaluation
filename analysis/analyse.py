@@ -59,7 +59,7 @@ def visualise_experiments(definitions, data_path):
                 print("Can't find visualisation script")
 
 
-def process_directory(path, experiment_data):
+def process_directory(path, experiment_data, wide=False):
     dist_path = pathlib.Path(path)
     dist_uri = dist_path.absolute().as_posix()
 
@@ -68,8 +68,8 @@ def process_directory(path, experiment_data):
         if int(args.cluster) == 1:
             plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '#0080ff', 'darkblue')
             plot_ping_topology(experiment_data, dist_uri, cluster1_mapping, '#0080ff', 'darkblue', cross=True)
-            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping)
-            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True)
+            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, wide=wide)
+            plot_iperf_results(experiment_data, dist_uri, cluster1_mapping, cross=True, wide=wide)
             experiment_4(experiment_data, dist_uri, cluster1_mapping)
             experiment_4(experiment_data, dist_uri, cluster1_mapping, cross=True)
             experiment_5(experiment_data, dist_uri, cluster1_mapping)
@@ -101,6 +101,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Analyse experiments.')
     parser.add_argument('-p','--path', nargs='+', help='Which distribution to analyse.', required=True)
     parser.add_argument('-c','--cluster', help='Cluster number.', default=1)
+    parser.add_argument('-w', '--wide', help='Plot experiment 2 with a larger range.', action='store_true')
     args = parser.parse_args()
 
     # Get experiment definitions.
@@ -132,7 +133,7 @@ if __name__ == "__main__":
             else:
                 print("Rejected: {}".format(path))
 
-        if args.cluster == 1:
+        if int(args.cluster) == 1:
             aggregate_ping_topology_data(output_path + "/experiment2", experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping, '#0080ff', 'darkblue', cross=False)
             aggregate_ping_topology_data(output_path + "/experiment2-crosstalk", experiment_data, dist_uris, cluster1_mapping if args.cluster == 1 else cluster2_mapping, '#0080ff', 'darkblue', cross=True)
         else:
@@ -144,6 +145,6 @@ if __name__ == "__main__":
 
     else:
         # Plot all graphs for a single run.
-        process_directory(str(paths[0]), experiment_data)
+        process_directory(str(paths[0]), experiment_data, wide=args.wide)
 
 
